@@ -24,14 +24,17 @@ private:
     int wCoord;
     matrix boardSize;
 public:
-    Board(matrix tab);
-    void printSize();
+    Board(const matrix &tab);
+    void printSize(matrix matrix);
     void setCoordinates();
-    std::string takeAction(std::string where);
+    std::string takeAction(const std::string &where);
 
     int getWCoord() const;
 
     int getHCoord() const;
+    std::vector<std::string>  getNeightbours();
+
+    const matrix &getBoardSize() const;
 
     virtual ~Board();
 };

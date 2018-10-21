@@ -3,4 +3,4 @@ project(fifteenGame)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(fifteenGame main.cpp Board.h Board.cpp)
+add_executable(fifteenGame main.cpp Board.h Board.cpp Node.h Node.cpp)

@@ -4,20 +4,16 @@
 #include "Board.h"
 #include <algorithm>
 
-Board::Board(matrix tab){
+Board::Board(const matrix &tab){
     this->boardSize=tab;
     this->hCoord=0;
     this->wCoord=0;
-    for(int i=0;i<=3; i++){
-        for (int j;j<=3;j++){
-            //Assigning values from argument to our board that we will be working on
-            boardSize[i][j]=tab[i][j];
-            }
-        }
     }
 
 
-std::string Board::takeAction(std::string where) {
+std::string Board::takeAction(const std::string &where) {
+    //TODO No need to check if eligle for move, getNeightbours is responsible for that
+
     if (where == "U" || where == "u"){
         if(this->hCoord>0) {
             std::swap(boardSize[hCoord][wCoord],boardSize[hCoord-1][wCoord]);
@@ -46,17 +42,13 @@ std::string Board::takeAction(std::string where) {
             return "R";
         }
     }
-    return "Nothing happend!";
+    return "ERROR";
 }
 
-void Board::printSize() {
+void Board::printSize(matrix matrix) {
     for(int i=0; i<=3;i++){
         for(int j=0; j<=3;j++){
-            std::cout<<boardSize[i][j] <<"    ";
-            if(boardSize[i][j]==0) {
-                this->wCoord = j;
-                this->hCoord = i;
-            }
+            std::cout<<matrix[i][j] <<"    ";
         }
         std::cout<<"\n";
     }
@@ -82,4 +74,56 @@ void Board::setCoordinates() {
     }
     }
     }
+}
+std::vector<std::string> Board::getNeightbours() {
+
+    int x=0;
+    int y=0;
+    bool U = true;
+    bool D = true;
+    bool L = true;
+    bool R = true;
+    std::vector<std::string> possibleMoves;
+    for (int i=0; i<=3;i++){
+        y=this->hCoord;
+        x=this->wCoord;
+        if (y > 0) {
+            if(U)
+                possibleMoves.push_back("U");
+            U=false;
+        }
+        if (y < 3) {
+            if(D)
+                possibleMoves.push_back("D");
+            D=false;
+        }
+        if (x > 0) {
+            if(L)
+                possibleMoves.push_back("L");
+            L=false;
+        }
+        if (x < 3) {
+            if(R)
+                possibleMoves.push_back("R");
+            R=false;
+        }
+    }
+    return possibleMoves;
+
+    /*
+    std::vector<std::pair<int,int>> neightbours;
+        if(hCoord>0)
+            neightbours.emplace_back(hCoord-1, wCoord);
+        if(hCoord<3)
+            neightbours.emplace_back(hCoord+1, wCoord);
+        if(wCoord>0)
+            neightbours.emplace_back(hCoord, wCoord-1);
+        if (wCoord<3)
+            neightbours.emplace_back(hCoord,wCoord+1);
+    return neightbours;
+*/
+}
+
+const matrix &Board::getBoardSize() const {
+    return boardSize;
 }
