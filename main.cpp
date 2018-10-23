@@ -28,7 +28,7 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult)
         std::cout<<"Found Solution";
         return 1;
     }
-    auto start = std::make_shared<Node>(BoardState->takeAction("L"), nullptr, BoardState->getNeightbours(), BoardState->getBoardSize());
+    auto start = std::make_shared<Node>("Error", nullptr, BoardState->getNeightbours(), BoardState->getBoardSize());
     std::set<matrix> hold;
     std::queue<std::shared_ptr<Node>> open_list;
     std::unordered_set<matrix, VectorHash> explored;
@@ -51,6 +51,7 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult)
 
             if(BoardState->getBoardSize()==Goal) {
                 std::cout << "FOUND SOLUTION";
+                std::cout << curNode->getPath() <<std::endl;
                 return 1;
             }else {
                 for (auto &it:curNode->getNeightbours()){
@@ -67,6 +68,7 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult)
 
                     if(BoardState->getBoardSize()==Goal) {
                         std::cout<<"FOUND SOLUTION" << std::endl;
+                        std::cout << Children->getPath()<<std::endl;
                         return 1;
                     }
 
@@ -80,7 +82,7 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult)
                              */
                             //BoardState->printSize(Children->getState());
                             hold.insert(Children->getState());
-                            std::cout<<" SIZE OF OPEN " << open_list.size() << std::endl;
+                            //std::cout<<" SIZE OF OPEN " << open_list.size() << std::endl;
                        }
                     else {
                        //std::cout<< "DO I WORK?"<<std::endl;
@@ -88,9 +90,7 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult)
                    //numExpanded++;
                 }
                 explored.insert(curNode->getState());
-                std::cout<<" SIZE___"<<explored.size()<<std::endl;
-                if(explored.size()>1500)
-                    return 1;
+                //std::cout<<" SIZE___"<<explored.size()<<std::endl;
                 numExpanded++;
             }
 
@@ -100,7 +100,7 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult)
 int main() {
     matrix Testuje={{1,2,3,4},
                     {5,6,7,8},
-                    {9,10,11,0},
+                    {9,10,0,11},
                     {13,14,15,12}};
     auto Test = std::make_shared<Board>(Testuje);
     //ptrBoard Test = std::make_shared<Board>(Board())
