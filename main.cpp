@@ -11,6 +11,9 @@ matrix Goal ={{1,2,3,4},
                   {5,6,7,8},
                   {9,10,11,12},
                   {13,14,15,0}};
+/*
+ * Fajna funkcja haszujaca wiem
+ */
 struct VectorHash{
     size_t operator()(const matrix &v)const{
         std::hash<int> hasher;
@@ -29,50 +32,44 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult)
         return 1;
     }
     auto start = std::make_shared<Node>("Error", nullptr, BoardState->getNeightbours(), BoardState->getBoardSize());
+    std::shared_ptr<Node> curNode;
+    std::shared_ptr<Node>Children;
     std::set<matrix> hold;
     std::queue<std::shared_ptr<Node>> open_list;
     std::unordered_set<matrix, VectorHash> explored;
-    //std::map<matrix,int>explored;
-    //std::shared_ptr<Board> Trying = std::make_shared<Board>(*BoardState);
 
     open_list.push(start);
     int numExpanded = 0 ;
-    if(open_list.empty())
-        std::cout<<"lista jest pusta";
     while(!open_list.empty()){
-        auto curNode = open_list.front();
-        //BoardState->printSize(curNode->getState());
+        curNode = open_list.front();
         open_list.pop();
-        //for (auto &it:curNode->getNeightbours())
-        //    std::cout << "M "<<it <<" ";
-        //std::cout<<" LAST MOVE "<<curNode->getActionTaken()<<std::endl;
 
 
 
-            if(BoardState->getBoardSize()==Goal) {
-                std::cout << "FOUND SOLUTION";
-                std::cout << curNode->getPath() <<std::endl;
-                return 1;
-            }else {
+            if(BoardState->getBoardSize()==Goal){
+                    std::cout << "FOUND SOLUTION";
+                    std::cout << curNode->getPath() << std::endl;
+                    return 1;
+                    break;
+            }
+            else {
                 for (auto &it:curNode->getNeightbours()){
                     BoardState->setBoardSize(curNode->getState());
                     BoardState->setCoordinates();
                     BoardState->takeAction(it);
-                    //std::cout<<"DEBUGGING FOR CHECKING EXPLORED\n ";
-                    //BoardState->printSize(BoardState->getBoardSize());
-                    //std::cout<<"####################################\n";
 
-                    auto Children = std::make_shared<Node> (it,curNode, BoardState->getNeightbours() , BoardState->getBoardSize());
-                    //std::cout<<" MOVE : " << Children->getActionTaken() << "__COUNTER " <<numExpanded<< std::endl;
-                    //BoardState->printSize(BoardState->getBoardSize());
+                    Children = std::make_shared<Node> (it,curNode, BoardState->getNeightbours() , BoardState->getBoardSize());
+                   std::cout<<"#####################################\n";
+                    BoardState->printSize(BoardState->getBoardSize());
 
+                    std::cout<<"#####################################\n";
                     if(BoardState->getBoardSize()==Goal) {
                         std::cout<<"FOUND SOLUTION" << std::endl;
                         std::cout << Children->getPath()<<std::endl;
                         return 1;
+                        break;
                     }
 
-                    std::cout<<std::endl;
                    if(explored.find(Children->getState())==explored.end()){
                        if(hold.find(Children->getState())==hold.end())
                            open_list.push(Children);
@@ -80,18 +77,13 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult)
                              * JAK TO SOBIE ODKOMENTUEJSZ TO MASZ JAK WYGLADAL BOARD W KAZDYM PRZEBIEGU
                              * I JAK SOBIE SKACZE
                              */
-                            //BoardState->printSize(Children->getState());
                             hold.insert(Children->getState());
-                            //std::cout<<" SIZE OF OPEN " << open_list.size() << std::endl;
                        }
                     else {
-                       //std::cout<< "DO I WORK?"<<std::endl;
                    }
-                   //numExpanded++;
                 }
                 explored.insert(curNode->getState());
-                //std::cout<<" SIZE___"<<explored.size()<<std::endl;
-                numExpanded++;
+                //std::cout<<"EXPLORED SIZE "<<explored.size() <<" OPEN LIST " << open_list.size()<<std::endl;
             }
 
     }
@@ -99,32 +91,11 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult)
 }
 int main() {
     matrix Testuje={{1,2,3,4},
-                    {5,6,7,8},
-                    {9,10,0,11},
-                    {13,14,15,12}};
+                    {5,10,6,7},
+                    {9,14,11,8},
+                    {13,0,15,12}};
     auto Test = std::make_shared<Board>(Testuje);
-    //ptrBoard Test = std::make_shared<Board>(Board())
     Test->setCoordinates();
-    /*
-     * MOVEMENT DEBUGGING
-    int i=7;
-    while(i!=0){
-        std::cin >> i;
-        std::cout << "BEFORE\n";
-        Test->printSize(Test->getBoardSize());
-            if(i==1)
-                std::cout<<Test->takeAction("L")<<std::endl;
-            if(i==2)
-                std::cout<<Test->takeAction("R")<<std::endl;
-            if(i==3)
-                std::cout<<Test->takeAction("U")<<std::endl;
-            if(i==4)
-                std::cout<<Test->takeAction("D")<<std::endl;
-        std::cout<<"###################################\n";
-        Test->printSize(Test->getBoardSize());
-        std::cout<<"AFTER\n";
-    }
-     */
 
     BFS(Test, Goal);
 
