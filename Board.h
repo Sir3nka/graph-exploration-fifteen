@@ -21,18 +21,28 @@ private:
      *If we want to move up our hCoord will get ++ etc, that's the idea
      */
     int hCoord;
+public:
+    void setBoardSize(const matrix &boardSize);
+
+private:
     int wCoord;
     matrix boardSize;
 public:
     Board(const matrix &tab);
+    /*Board( Board &RHS){
+        RHS.wCoord=this->wCoord;
+        RHS.hCoord=this->hCoord;
+        RHS.boardSize=this->boardSize;
+
+    }*/
     void printSize(matrix matrix);
     void setCoordinates();
-    std::string takeAction(const std::string &where);
+    const std::string takeAction(const std::string &where) ;
 
     int getWCoord() const;
 
     int getHCoord() const;
-    std::vector<std::string>  getNeightbours();
+    const std::vector<std::string>  getNeightbours();
 
     const matrix &getBoardSize() const;
 

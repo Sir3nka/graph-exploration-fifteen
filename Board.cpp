@@ -11,36 +11,28 @@ Board::Board(const matrix &tab){
     }
 
 
-std::string Board::takeAction(const std::string &where) {
+const std::string Board::takeAction(const std::string &where) {
     //TODO No need to check if eligle for move, getNeightbours is responsible for that
 
-    if (where == "U" || where == "u"){
-        if(this->hCoord>0) {
+    if (where =="U" ){
             std::swap(boardSize[hCoord][wCoord],boardSize[hCoord-1][wCoord]);
             this->hCoord--;
             return "U";
-        }
     }
-    if(where == "L" || where == "l"){
-        if(this->wCoord>0){
+    if(where =="L" ){
             std::swap(boardSize[hCoord][wCoord],boardSize[hCoord][wCoord-1]);
             this->wCoord--;
             return "L";
-        }
     }
-    if(where =="D" || where == "d"){
-        if(this->hCoord<3){
+    if(where =="D" ){
             std::swap(boardSize[hCoord][wCoord],boardSize[hCoord+1][wCoord]);
             this->hCoord++;
             return "D";
-        }
     }
-    if(where == "R" || where == "r"){
-        if(this->wCoord<3){
+    if(where =="R" ){
             std::swap(boardSize[hCoord][wCoord],boardSize[hCoord][wCoord+1]);
             this->wCoord++;
             return "R";
-        }
     }
     return "ERROR";
 }
@@ -75,7 +67,7 @@ void Board::setCoordinates() {
     }
     }
 }
-std::vector<std::string> Board::getNeightbours() {
+const std::vector<std::string> Board::getNeightbours(){
 
     int x=0;
     int y=0;
@@ -111,19 +103,23 @@ std::vector<std::string> Board::getNeightbours() {
     return possibleMoves;
 
     /*
-    std::vector<std::pair<int,int>> neightbours;
+    std::vector<std::pair<int,int>> posMoves;
         if(hCoord>0)
-            neightbours.emplace_back(hCoord-1, wCoord);
+            posMoves.emplace_back(hCoord-1, wCoord);
         if(hCoord<3)
-            neightbours.emplace_back(hCoord+1, wCoord);
+            posMoves.emplace_back(hCoord+1, wCoord);
         if(wCoord>0)
-            neightbours.emplace_back(hCoord, wCoord-1);
+            posMoves.emplace_back(hCoord, wCoord-1);
         if (wCoord<3)
-            neightbours.emplace_back(hCoord,wCoord+1);
-    return neightbours;
+            posMoves.emplace_back(hCoord,wCoord+1);
+    return posMoves;
 */
 }
 
 const matrix &Board::getBoardSize() const {
     return boardSize;
+}
+
+void Board::setBoardSize(const matrix &boardSize) {
+    Board::boardSize = boardSize;
 }
