@@ -6,6 +6,8 @@
 #include <set>
 #include <unordered_set>
 #include <map>
+#include <fstream>
+#include <sstream>
 
 matrix Goal ={{1,2,3,4},
                   {5,6,7,8},
@@ -44,58 +46,80 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult)
         curNode = open_list.front();
         open_list.pop();
 
+        std::cout<<"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n";
+        BoardState->printSize(curNode->getState());
 
+        std::cout<<"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#\n";
 
             if(BoardState->getBoardSize()==Goal){
                     std::cout << "FOUND SOLUTION";
-                    std::cout << curNode->getPath() << std::endl;
+                    std::cout << "THE PATH TO SOLVE THIS BOARD IS " <<curNode->getPath() << std::endl;
                     return 1;
-                    break;
             }
             else {
-                for (auto &it:curNode->getNeightbours()){
+                for (const auto &it:curNode->getNeightbours()){
                     BoardState->setBoardSize(curNode->getState());
                     BoardState->setCoordinates();
                     BoardState->takeAction(it);
 
                     Children = std::make_shared<Node> (it,curNode, BoardState->getNeightbours() , BoardState->getBoardSize());
-                   std::cout<<"#####################################\n";
+                    std::cout<<"#####################################\n";
                     BoardState->printSize(BoardState->getBoardSize());
 
                     std::cout<<"#####################################\n";
                     if(BoardState->getBoardSize()==Goal) {
                         std::cout<<"FOUND SOLUTION" << std::endl;
-                        std::cout << Children->getPath()<<std::endl;
+                        std::cout <<"THE PATH TO SOLVE THIS BOARD IS " <<Children->getPath()<<std::endl;
                         return 1;
-                        break;
                     }
 
                    if(explored.find(Children->getState())==explored.end()){
                        if(hold.find(Children->getState())==hold.end())
                            open_list.push(Children);
-                            /*
-                             * JAK TO SOBIE ODKOMENTUEJSZ TO MASZ JAK WYGLADAL BOARD W KAZDYM PRZEBIEGU
-                             * I JAK SOBIE SKACZE
-                             */
                             hold.insert(Children->getState());
                        }
                     else {
                    }
                 }
-                explored.insert(curNode->getState());
-                //std::cout<<"EXPLORED SIZE "<<explored.size() <<" OPEN LIST " << open_list.size()<<std::endl;
+                explored.insert(std::move(curNode->getState()));
             }
 
     }
     return 15;
 }
-int main() {
-    matrix Testuje={{1,2,3,4},
-                    {5,10,6,7},
-                    {9,14,11,8},
-                    {13,0,15,12}};
+
+matrix parserToMatrix(std::string &arg) {
+matrix Numbers;
+std::ifstream infile(arg.c_str());
+std::string String;
+int a;
+    while(getline(infile, String)) {
+        //Kinda lazy solution
+        if (String.size() > 3) {
+            std::vector<int> Line;
+            std::stringstream Stream(String);
+            while (Stream >> a)
+            Line.push_back(a);
+            Numbers.push_back(Line);
+        }
+    }
+    infile.close();
+    return Numbers;
+}
+int main(int argc, char* argv[]) {
+    std::vector<std::string>  fileName;
+    if(argc>1) {
+        //We need to assign second argument that we pass to our program becaus first is call to execute our file in this case ./FifteenGame
+        fileName.assign(argv + 1, argv + argc);
+    }
+    std::string Hold;
+    for(auto &it:fileName)
+        Hold.append(it);
+    std::cout << Hold << std::endl;
+    matrix Testuje=parserToMatrix(Hold);
     auto Test = std::make_shared<Board>(Testuje);
     Test->setCoordinates();
+    Test->printSize(parserToMatrix(Hold));
 
     BFS(Test, Goal);
 

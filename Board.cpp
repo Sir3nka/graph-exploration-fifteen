@@ -12,7 +12,6 @@ Board::Board(const matrix &tab){
 
 
 const std::string Board::takeAction(const std::string &where) {
-    //TODO No need to check if eligle for move, getNeightbours is responsible for that
 
     if (where =="U" ){
             std::swap(boardSize[hCoord][wCoord],boardSize[hCoord-1][wCoord]);
