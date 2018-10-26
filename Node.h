@@ -15,28 +15,11 @@ class Node{
 public:
     Node(const std::string &actionTaken, NodePtr parent, const std::vector<std::string > & neightbours, matrix oldState, std::vector<std::string> &pattern) : actionTaken(actionTaken),
     parent(parent),oldState(oldState) {
-        for(const auto &itt:pattern) {
-            for (const auto &it:neightbours) {
-                if(it==itt) {
-                    std::string toNotPush;
-                    if (parent != nullptr) {
-                        if (parent->getActionTaken() == "D")
-                            toNotPush = "U";
-                        if (parent->getActionTaken() == "L")
-                            toNotPush = "R";
-                        if (parent->getActionTaken() == "R")
-                            toNotPush = "L";
-                        if (parent->getActionTaken() == "U")
-                            toNotPush = "D";
-                        if (it != toNotPush)
-                            this->posMoves.push_back(it);
-                    } else {
+        for(const auto &itt:pattern)
+            for (const auto &it:neightbours)
+                if(it==itt)
                         this->posMoves.push_back(it);
-                    }
-                }
-            }
 
-        }
         if(parent != nullptr){
             this->path = parent->getPath();
             if(actionTaken!="ERROR"){

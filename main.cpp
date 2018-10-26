@@ -38,12 +38,15 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
     std::shared_ptr<Node>Children;
     std::set<matrix> hold;
     std::queue<std::shared_ptr<Node>> open_list;
-    std::set<matrix> explored;
+    std::map<matrix, int> explored;
 
     open_list.push(start);
     int numExpanded = 0 ;
+    int a1=0;
+    int  a2=0;
     while(!open_list.empty()){
         curNode = open_list.front();
+        explored[curNode->getState()]=1;
         open_list.pop();
             if(BoardState->getBoardSize()==Goal){
                     std::cout << curNode->getCounter() << std::endl;
@@ -62,16 +65,14 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
                         std::cout << Children->getPath() ;
                         return 1;
                     }
+                   if(explored.find(Children->getState())!=explored.end())
+                       continue;
+                       if(hold.find(Children->getState())!=hold.end())
+                           continue;
+                       open_list.push(Children);
+                       hold.insert(Children->getState());
 
-                   if(explored.find(Children->getState())==explored.end()){
-                       if(hold.find(Children->getState())==hold.end())
-                           open_list.push(Children);
-                            hold.insert(Children->getState());
-                       }
-                    else {
-                   }
                 }
-                explored.insert(std::move(curNode->getState()));
             }
 
     }
