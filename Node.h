@@ -13,23 +13,27 @@
 class Node{
     typedef std::shared_ptr<Node> NodePtr;
 public:
-    Node(const std::string &actionTaken, NodePtr parent, const std::vector<std::string > & neightbours, matrix oldState) : actionTaken(actionTaken),
+    Node(const std::string &actionTaken, NodePtr parent, const std::vector<std::string > & neightbours, matrix oldState, std::vector<std::string> &pattern) : actionTaken(actionTaken),
     parent(parent),oldState(oldState) {
-        for (const auto & it:neightbours){
-            std::string toNotPush;
-            if(parent!= nullptr) {
-                if (parent->getActionTaken() == "D")
-                    toNotPush = "U";
-                if (parent->getActionTaken() == "L")
-                    toNotPush = "R";
-                if (parent->getActionTaken() == "R")
-                    toNotPush = "L";
-                if (parent->getActionTaken() == "U")
-                    toNotPush = "D";
-                if(it!=toNotPush)
-                this->posMoves.push_back(it);
-            }else{
-                this->posMoves.push_back(it);
+        for(const auto &itt:pattern) {
+            for (const auto &it:neightbours) {
+                if(it==itt) {
+                    std::string toNotPush;
+                    if (parent != nullptr) {
+                        if (parent->getActionTaken() == "D")
+                            toNotPush = "U";
+                        if (parent->getActionTaken() == "L")
+                            toNotPush = "R";
+                        if (parent->getActionTaken() == "R")
+                            toNotPush = "L";
+                        if (parent->getActionTaken() == "U")
+                            toNotPush = "D";
+                        if (it != toNotPush)
+                            this->posMoves.push_back(it);
+                    } else {
+                        this->posMoves.push_back(it);
+                    }
+                }
             }
 
         }
@@ -38,6 +42,10 @@ public:
             if(actionTaken!="ERROR"){
                 path+=this->actionTaken;
             }
+        }
+        this-> counter=0;
+        if(parent!=nullptr) {
+            counter += 1+this->parent->getCounter();
         }
     }
 
@@ -62,6 +70,9 @@ private:
     NodePtr parent;
     std::vector<std::string> posMoves;
     matrix oldState;
+    int counter;
+public:
+    int getCounter() const;
 
 };
 #endif //FIFTEENGAME_NODE_H

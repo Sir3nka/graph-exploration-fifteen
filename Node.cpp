@@ -45,3 +45,7 @@ std::string Node::operator() () {
             toReturn.append(it);
     return toReturn;
 }
+
+int Node::getCounter() const {
+    return counter;
+}

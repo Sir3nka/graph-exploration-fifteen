@@ -26,34 +26,28 @@ struct VectorHash{
             return seed;
     }
 };
-int BFS (std::shared_ptr<Board> BoardState, matrix resoult)
+int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::string> &pattern)
 {
     //TODO Kinda stuck on how to move around graph via nodes, should I save the state of the board before entering childrens?
     if(BoardState->getBoardSize()==Goal){
         std::cout<<"Found Solution";
         return 1;
     }
-    auto start = std::make_shared<Node>("Error", nullptr, BoardState->getNeightbours(), BoardState->getBoardSize());
+    auto start = std::make_shared<Node>("Error", nullptr, BoardState->getNeightbours(), BoardState->getBoardSize(), pattern);
     std::shared_ptr<Node> curNode;
     std::shared_ptr<Node>Children;
     std::set<matrix> hold;
     std::queue<std::shared_ptr<Node>> open_list;
-    std::unordered_set<matrix, VectorHash> explored;
+    std::set<matrix> explored;
 
     open_list.push(start);
     int numExpanded = 0 ;
     while(!open_list.empty()){
         curNode = open_list.front();
         open_list.pop();
-
-        std::cout<<"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%\n";
-        BoardState->printSize(curNode->getState());
-
-        std::cout<<"%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%#\n";
-
             if(BoardState->getBoardSize()==Goal){
-                    std::cout << "FOUND SOLUTION";
-                    std::cout << "THE PATH TO SOLVE THIS BOARD IS " <<curNode->getPath() << std::endl;
+                    std::cout << curNode->getCounter() << std::endl;
+                    std::cout << curNode->getPath() ;
                     return 1;
             }
             else {
@@ -62,14 +56,10 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult)
                     BoardState->setCoordinates();
                     BoardState->takeAction(it);
 
-                    Children = std::make_shared<Node> (it,curNode, BoardState->getNeightbours() , BoardState->getBoardSize());
-                    std::cout<<"#####################################\n";
-                    BoardState->printSize(BoardState->getBoardSize());
-
-                    std::cout<<"#####################################\n";
+                    Children = std::make_shared<Node> (it,curNode, BoardState->getNeightbours() , BoardState->getBoardSize(), pattern);
                     if(BoardState->getBoardSize()==Goal) {
-                        std::cout<<"FOUND SOLUTION" << std::endl;
-                        std::cout <<"THE PATH TO SOLVE THIS BOARD IS " <<Children->getPath()<<std::endl;
+                        std::cout << Children->getCounter() << std::endl;
+                        std::cout << Children->getPath() ;
                         return 1;
                     }
 
@@ -106,22 +96,28 @@ int a;
     infile.close();
     return Numbers;
 }
-int main(int argc, char* argv[]) {
+int main() {
     std::vector<std::string>  fileName;
-    if(argc>1) {
-        //We need to assign second argument that we pass to our program becaus first is call to execute our file in this case ./FifteenGame
-        fileName.assign(argv + 1, argv + argc);
-    }
+  //  if(argc>1) {
+  //     //We need to assign second argument that we pass to our program becaus first is call to execute our file in this case ./FifteenGame
+  //      fileName.assign(argv + 1, argv + argc);
+  //  }
     std::string Hold;
-    for(auto &it:fileName)
-        Hold.append(it);
-    std::cout << Hold << std::endl;
+    std::cin >> Hold;
+  //  for(auto &it:fileName)
+  //      Hold.append(it);
+    std::vector<std::string> pattern ;
+
+    for (int i=0;i <=3; i++) {
+        std::string b;
+        std::cin >> b;
+        pattern.push_back(b);
+    }
     matrix Testuje=parserToMatrix(Hold);
     auto Test = std::make_shared<Board>(Testuje);
     Test->setCoordinates();
-    Test->printSize(parserToMatrix(Hold));
 
-    BFS(Test, Goal);
+    BFS(Test, Goal, pattern);
 
     return 0;
 }
