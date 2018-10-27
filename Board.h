@@ -42,7 +42,7 @@ public:
     int getWCoord() const;
 
     int getHCoord() const;
-    const std::vector<char> getPossibleMoves();
+    const std::vector<char> getPossibleMoves() const;
 
     const matrix& getBoard() const;
 

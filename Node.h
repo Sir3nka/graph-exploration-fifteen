@@ -13,14 +13,12 @@
 class Node{
     typedef std::shared_ptr<Node> NodePtr;
 public:
-    Node(const char actionTaken, NodePtr parent, const std::vector<char>& neightbours, matrix oldState, std::vector<char>& pattern) : actionTaken(actionTaken),
-    parent(parent),oldState(oldState) {
+    Node(const char actionTaken, NodePtr parent, const std::vector<char>& neightbours, matrix oldState, std::vector<char>& pattern): actionTaken(actionTaken),
+    parent(parent), oldState(oldState), counter(0) {
         for(const auto &patternFromAgument:pattern)
             for (const auto &possibleMoveFromNeightbours:neightbours)
                 if(patternFromAgument == possibleMoveFromNeightbours)
                         this->posMoves.push_back(possibleMoveFromNeightbours);
-
-        this->counter = 0;
 
         if(parent != nullptr){
             this->path = parent->getPath();

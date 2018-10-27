@@ -62,7 +62,7 @@ int BFS (std::shared_ptr<Board> BoardState, matrix& result, std::vector<char>& p
                 if(explored.find(Children->getState()) != explored.end())
                     continue;
 
-                if(BoardState->getBoard()==Goal) {
+                if(BoardState->getBoard() == Goal) {
                     std::cout << Children->getCounter() << std::endl;
                     std::cout << Children->getPath();
                     return 1;
@@ -80,9 +80,9 @@ int BFS (std::shared_ptr<Board> BoardState, matrix& result, std::vector<char>& p
 }
 
 matrix parserToMatrix(std::string& arg) {
-    matrix Numbers;
     std::ifstream infile(arg.c_str());
     if(!infile.fail()) {
+        matrix Numbers;
         std::string String;
         while (getline(infile, String)) {
             //Kinda lazy solution
@@ -114,7 +114,7 @@ int main(int argc, char* argv[]) {
     //STRASZNIE CHUJOWO ZROBIONE
     if(argc>2) {
         std::string str = (argv[2]);
-        for (unsigned int i = 0; i <= 3; i++) {
+        for (unsigned int i = 0; i <= 3; ++i) {
             pattern.push_back(str.at(i));
         }
     }
