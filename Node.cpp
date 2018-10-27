@@ -22,7 +22,7 @@ std::vector<std::string> Node::possibleMoves(){
 
 }
 
-matrix Node::getState()  {
+matrix& Node::getState()  {
     return oldState;
 }
 
@@ -37,14 +37,8 @@ bool Node::operator!=(const Node &rhs) const {
     return !(rhs == *this);
 }
 char Node::operator() () {
-    char toReturn;
-    for( auto&it:this->oldState)
-        for( auto &itt:it)
-            toReturn = itt;
-
     for( auto&it:this->getPossibleMovesForNode())
-            toReturn = it;
-    return toReturn;
+        return it;
 }
 
 int Node::getCounter() const {

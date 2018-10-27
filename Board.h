@@ -5,7 +5,7 @@
 
 /*
  * ADRIAN DLUGOSZ 211949
- * WOJCIECH JEZOWSKI NIE ZNAM TWOJEGO INDEKSU XD
+ * WOJCIECH JEZOWSKI 211954
  */
 #ifndef FIFTEENGAME_BOARD_H
 #define FIFTEENGAME_BOARD_H
@@ -13,7 +13,7 @@
 #include <iostream>
 #include <vector>
 
-typedef    std::vector<std::vector<int> > matrix;
+typedef    std::vector<std::vector<int>> matrix;
 
 class Board{
 private:
@@ -22,29 +22,29 @@ private:
      */
     int hCoord;
 public:
-    void setBoardSize(const matrix &boardSize);
+    void setBoardSize(const matrix& boardSize);
 
 private:
     int wCoord;
     matrix boardSize;
 public:
-    Board(const matrix &tab);
+    Board(const matrix& tab);
     /*Board( Board &RHS){
         RHS.wCoord=this->wCoord;
         RHS.hCoord=this->hCoord;
         RHS.boardSize=this->boardSize;
 
     }*/
-    void printSize(matrix matrix);
+    void printSize(matrix& matrix);
     void setCoordinates();
-    const char takeAction(const char &where) ;
+    const char takeAction(const char where) ;
 
     int getWCoord() const;
 
     int getHCoord() const;
-    const std::vector<char>  getPossibleMoves();
+    const std::vector<char> getPossibleMoves();
 
-    const matrix &getBoard() const;
+    const matrix& getBoard() const;
 
     virtual ~Board();
 };

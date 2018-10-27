@@ -4,14 +4,14 @@
 #include "Board.h"
 #include <algorithm>
 
-Board::Board(const matrix &tab){
-    this->boardSize=tab;
-    this->hCoord=0;
-    this->wCoord=0;
+Board::Board(const matrix& tab){
+    this->boardSize =   tab;
+    this->hCoord =      0;
+    this->wCoord =      0;
     }
 
 
-const char Board::takeAction(const char &where) {
+const char Board::takeAction(const char where) {
 
     if (where == 'U'){
             std::swap(boardSize[hCoord][wCoord],boardSize[hCoord-1][wCoord]);
@@ -36,7 +36,7 @@ const char Board::takeAction(const char &where) {
     return 'E';
 }
 
-void Board::printSize(matrix matrix) {
+void Board::printSize(matrix& matrix) {
     for(int i=0; i<=3;i++){
         for(int j=0; j<=3;j++){
             std::cout<<matrix[i][j] <<"    ";
@@ -100,22 +100,9 @@ const std::vector<char> Board::getPossibleMoves(){
         }
     }
     return possibleMoves;
-
-    /*
-    std::vector<std::pair<int,int>> posMoves;
-        if(hCoord>0)
-            posMoves.emplace_back(hCoord-1, wCoord);
-        if(hCoord<3)
-            posMoves.emplace_back(hCoord+1, wCoord);
-        if(wCoord>0)
-            posMoves.emplace_back(hCoord, wCoord-1);
-        if (wCoord<3)
-            posMoves.emplace_back(hCoord,wCoord+1);
-    return posMoves;
-*/
 }
 
-const matrix &Board::getBoard() const {
+const matrix& Board::getBoard() const {
     return boardSize;
 }
 
