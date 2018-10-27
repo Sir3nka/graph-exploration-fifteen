@@ -42,9 +42,9 @@ public:
     int getWCoord() const;
 
     int getHCoord() const;
-    const std::vector<std::string>  getNeightbours();
+    const std::vector<std::string>  getPossibleMoves();
 
-    const matrix &getBoardSize() const;
+    const matrix &getBoard() const;
 
     virtual ~Board();
 };

@@ -66,7 +66,7 @@ void Board::setCoordinates() {
         }
     }
 }
-const std::vector<std::string> Board::getNeightbours(){
+const std::vector<std::string> Board::getPossibleMoves(){
 
     int x=0;
     int y=0;
@@ -115,7 +115,7 @@ const std::vector<std::string> Board::getNeightbours(){
 */
 }
 
-const matrix &Board::getBoardSize() const {
+const matrix &Board::getBoard() const {
     return boardSize;
 }
 

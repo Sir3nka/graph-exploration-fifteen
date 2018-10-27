@@ -4,7 +4,7 @@
 
 #include "Node.h"
 
-const std::vector<std::string>& Node::getNeightbours() const {
+const std::vector<std::string>& Node::getPossibleMovesForNode() const {
     return this->posMoves;
 }
 const std::string& Node::getActionTaken() const {
@@ -41,7 +41,7 @@ std::string Node::operator() () {
     for( auto&it:this->oldState)
         for( auto &itt:it)
             toReturn.append(std::to_string(itt));
-    for( auto&it:this->getNeightbours())
+    for( auto&it:this->getPossibleMovesForNode())
             toReturn.append(it);
     return toReturn;
 }

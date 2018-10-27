@@ -15,9 +15,9 @@ class Node{
 public:
     Node(const std::string &actionTaken, NodePtr parent, const std::vector<std::string > & neightbours, matrix oldState, std::vector<std::string> &pattern) : actionTaken(actionTaken),
     parent(parent),oldState(oldState) {
-        for(const auto &patternFromargument:pattern)
+        for(const auto &patternFromaAgument:pattern)
             for (const auto &possibleMoveFromNeightbours:neightbours)
-                if(patternFromargument==possibleMoveFromNeightbours)
+                if(patternFromaAgument==possibleMoveFromNeightbours)
                         this->posMoves.push_back(possibleMoveFromNeightbours);
 
         this->counter=0;
@@ -37,13 +37,15 @@ public:
 
     matrix getState() ;
 
-    const std::vector<std::string> &getNeightbours() const;
+    const std::vector<std::string> &getPossibleMovesForNode() const;
 
     NodePtr getParent() const;
 
     const std::string &getActionTaken() const;
     const std::string &getPath() const;
     std::vector<std::string> possibleMoves();
+    int getCounter() const;
+
 
 private:
     std::string actionTaken;
@@ -52,8 +54,5 @@ private:
     std::vector<std::string> posMoves;
     matrix oldState;
     int counter;
-public:
-    int getCounter() const;
-
 };
 #endif //FIFTEENGAME_NODE_H

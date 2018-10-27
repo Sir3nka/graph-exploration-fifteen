@@ -30,12 +30,11 @@ struct VectorHash{
 };
 int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::string> &pattern)
 {
-    //TODO Kinda stuck on how to move around graph via nodes, should I save the state of the board before entering childrens?
-    if(BoardState->getBoardSize()==Goal){
+    if(BoardState->getBoard()==Goal){
         std::cout<<"Found Solution, loaded matrix is equal to final matrix";
         return 1;
     }
-    auto start = std::make_shared<Node>("Error", nullptr, BoardState->getNeightbours(), BoardState->getBoardSize(), pattern);
+    auto start = std::make_shared<Node>("Error", nullptr, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern);
     std::shared_ptr<Node> curNode;
     std::shared_ptr<Node>Children;
     std::set<matrix> hold;
@@ -47,23 +46,23 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
         curNode = open_list.front();
         explored.insert(curNode->getState());
         open_list.pop();
-        if(BoardState->getBoardSize()==Goal){
+        if(BoardState->getBoard()==Goal){
                 std::cout << curNode->getCounter() << std::endl;
                 std::cout << curNode->getPath() ;
                 return 1;
         }
         else {
-            for (const auto &it:curNode->getNeightbours()){
+            for (const auto &it:curNode->getPossibleMovesForNode()){
                 BoardState->setBoardSize(curNode->getState());
                 BoardState->setCoordinates();
                 BoardState->takeAction(it);
 
-                Children = std::make_shared<Node> (it,curNode, BoardState->getNeightbours() , BoardState->getBoardSize(), pattern);
+                Children = std::make_shared<Node> (it,curNode, BoardState->getPossibleMoves() , BoardState->getBoard(), pattern);
 
                 if(explored.find(Children->getState()) != explored.end())
                     continue;
 
-                if(BoardState->getBoardSize()==Goal) {
+                if(BoardState->getBoard()==Goal) {
                     std::cout << Children->getCounter() << std::endl;
                     std::cout << Children->getPath() ;
                     return 1;
@@ -104,16 +103,14 @@ if(!infile.fail()) {
 }
 int main(int argc, char* argv[]) {
     clock_t tStart = clock();
-
+    std::vector<std::string> pattern ;
     std::vector<std::string>  fileName;
     if(argc>1) {
-       //We need to assign second argument that we pass to our program becaus first is call to execute our file in this case ./FifteenGame
         fileName.assign(argv + 1, argv + argc-1);
     }
     std::string Hold;
     for(auto &it:fileName)
         Hold.append(it);
-    std::vector<std::string> pattern ;
     //STRASZNIE CHUJOWO ZROBIONE
     if(argc>2) {
         std::string str = (argv[2]);
