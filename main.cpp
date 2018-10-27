@@ -9,6 +9,7 @@
 #include <fstream>
 #include <sstream>
 #include <time.h>
+#include <stack>
 
 
 matrix Goal ={{1,2,3,4},
@@ -79,6 +80,66 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
     return 15;
 }
 
+void Visit(std::shared_ptr<Board> BoardState, std::shared_ptr<Node> cN, std::stack<std::shared_ptr<Node>> ol,std::unordered_set<matrix, VectorHash> explored, std::vector<std::string> &pattern,    std::set<matrix> hold,
+        int rec
+) {
+    for (const auto &it:cN->getPossibleMovesForNode()) {
+        if(rec>=20)
+            break;
+        rec += 1;
+        BoardState->printSize(BoardState->getBoard());
+        BoardState->setBoardSize(cN->getState());
+        BoardState->setCoordinates();
+        BoardState->takeAction(it);
+        auto Children = std::make_shared<Node>(it, cN, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern);
+        if (BoardState->getBoard() == Goal) {
+            std::cout << Children->getCounter() << std::endl;
+            std::cout << Children->getPath();
+        }
+        if (explored.find(Children->getState()) != explored.end())
+            continue;
+        explored.insert(cN->getState());
+        if (hold.find(Children->getState()) != hold.end())
+            continue;
+        ol.push(Children);
+        hold.insert(Children->getState());
+        Visit(BoardState, Children, ol, explored, pattern, hold, 0);
+
+    }
+}
+
+
+int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::string> &pattern){
+    if(BoardState->getBoard()==Goal){
+        std::cout<<"Found Solution, loaded matrix is equal to final matrix";
+        return 1;
+    }
+    auto start = std::make_shared<Node>("Error", nullptr, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern);
+    std::shared_ptr<Node> curNode;
+    std::shared_ptr<Node>Children;
+    std::set<matrix> hold;
+    std::stack<std::shared_ptr<Node>> open_list;
+    std::unordered_set<matrix, VectorHash> explored;
+
+    open_list.push(start);
+    while(!open_list.empty()){
+        curNode = open_list.top();
+        explored.insert(curNode->getState());
+        open_list.pop();
+        int rc=0;
+        if(BoardState->getBoard()==Goal){
+            std::cout << curNode->getCounter() << std::endl;
+            std::cout << curNode->getPath() ;
+            return 1;
+        }
+        else {
+            Visit(BoardState, curNode,open_list,explored, pattern, hold, 0);
+            }
+        }
+        return 1;
+    }
+
+
 matrix parserToMatrix(std::string &arg) {
 matrix Numbers;
 std::ifstream infile(arg.c_str());
@@ -123,8 +184,14 @@ int main(int argc, char* argv[]) {
     matrix Testuje=parserToMatrix(Hold);
     auto Test = std::make_shared<Board>(Testuje);
     Test->setCoordinates();
-
+    int a =20;
+    std::string A;
+    std::cout <<"What method \n";
+    std::cin >> A;
+    if(A=="BFS")
     BFS(Test, Goal, pattern);
+    if(A=="DFS")
+    DFS(Test, Goal, pattern);
     printf("\nTime taken: %.3fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
     return 0;

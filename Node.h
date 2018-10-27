@@ -19,7 +19,6 @@ public:
             for (const auto &possibleMoveFromNeightbours:neightbours)
                 if(patternFromaAgument==possibleMoveFromNeightbours)
                         this->posMoves.push_back(possibleMoveFromNeightbours);
-
         this->counter=0;
         if(parent != nullptr){
             this->path = parent->getPath();
