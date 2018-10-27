@@ -62,8 +62,8 @@ void Board::setCoordinates() {
             if(this->boardSize[i][j]==0) {
                 this->wCoord = j;
                 this->hCoord = i;
-    }
-    }
+            }
+        }
     }
 }
 const std::vector<std::string> Board::getNeightbours(){

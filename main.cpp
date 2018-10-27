@@ -59,19 +59,20 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
                 BoardState->takeAction(it);
 
                 Children = std::make_shared<Node> (it,curNode, BoardState->getNeightbours() , BoardState->getBoardSize(), pattern);
+
+                if(explored.find(Children->getState()) != explored.end())
+                    continue;
+
                 if(BoardState->getBoardSize()==Goal) {
                     std::cout << Children->getCounter() << std::endl;
                     std::cout << Children->getPath() ;
                     return 1;
                 }
-               if(explored.find(Children->getState())!=explored.end())
+
+               if(hold.find(Children->getState()) != hold.end())
                    continue;
-
-                   if(hold.find(Children->getState())!=hold.end())
-                       continue;
-                   open_list.push(Children);
-                   hold.insert(Children->getState());
-
+               open_list.push(Children);
+               hold.insert(Children->getState());
             }
         }
 

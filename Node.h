@@ -15,19 +15,17 @@ class Node{
 public:
     Node(const std::string &actionTaken, NodePtr parent, const std::vector<std::string > & neightbours, matrix oldState, std::vector<std::string> &pattern) : actionTaken(actionTaken),
     parent(parent),oldState(oldState) {
-        for(const auto &itt:pattern)
-            for (const auto &it:neightbours)
-                if(it==itt)
-                        this->posMoves.push_back(it);
+        for(const auto &patternFromargument:pattern)
+            for (const auto &possibleMoveFromNeightbours:neightbours)
+                if(patternFromargument==possibleMoveFromNeightbours)
+                        this->posMoves.push_back(possibleMoveFromNeightbours);
 
+        this->counter=0;
         if(parent != nullptr){
             this->path = parent->getPath();
             if(actionTaken!="ERROR"){
                 path+=this->actionTaken;
             }
-        }
-        this-> counter=0;
-        if(parent!=nullptr) {
             counter += 1+this->parent->getCounter();
         }
     }
