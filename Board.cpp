@@ -11,29 +11,29 @@ Board::Board(const matrix &tab){
     }
 
 
-const std::string Board::takeAction(const std::string &where) {
+const char Board::takeAction(const char &where) {
 
-    if (where =="U" ){
+    if (where == 'U'){
             std::swap(boardSize[hCoord][wCoord],boardSize[hCoord-1][wCoord]);
             this->hCoord--;
-            return "U";
+            return 'U';
     }
-    if(where =="L" ){
+    if(where == 'L'){
             std::swap(boardSize[hCoord][wCoord],boardSize[hCoord][wCoord-1]);
             this->wCoord--;
-            return "L";
+            return 'L';
     }
-    if(where =="D" ){
+    if(where == 'D'){
             std::swap(boardSize[hCoord][wCoord],boardSize[hCoord+1][wCoord]);
             this->hCoord++;
-            return "D";
+            return 'D';
     }
-    if(where =="R" ){
+    if(where == 'R'){
             std::swap(boardSize[hCoord][wCoord],boardSize[hCoord][wCoord+1]);
             this->wCoord++;
-            return "R";
+            return 'R';
     }
-    return "ERROR";
+    return 'E';
 }
 
 void Board::printSize(matrix matrix) {
@@ -66,7 +66,7 @@ void Board::setCoordinates() {
         }
     }
 }
-const std::vector<std::string> Board::getPossibleMoves(){
+const std::vector<char> Board::getPossibleMoves(){
 
     int x=0;
     int y=0;
@@ -74,29 +74,29 @@ const std::vector<std::string> Board::getPossibleMoves(){
     bool D = true;
     bool L = true;
     bool R = true;
-    std::vector<std::string> possibleMoves;
+    std::vector<char> possibleMoves;
     for (int i=0; i<=3;i++){
         y=this->hCoord;
         x=this->wCoord;
         if (y > 0) {
             if(U)
-                possibleMoves.push_back("U");
-            U=false;
+                possibleMoves.push_back('U');
+            U = false;
         }
         if (y < 3) {
             if(D)
-                possibleMoves.push_back("D");
-            D=false;
+                possibleMoves.push_back('D');
+            D = false;
         }
         if (x > 0) {
             if(L)
-                possibleMoves.push_back("L");
-            L=false;
+                possibleMoves.push_back('L');
+            L = false;
         }
         if (x < 3) {
             if(R)
-                possibleMoves.push_back("R");
-            R=false;
+                possibleMoves.push_back('R');
+            R = false;
         }
     }
     return possibleMoves;

@@ -28,13 +28,13 @@ struct VectorHash{
             return seed;
     }
 };
-int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::string> &pattern)
+int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<char> &pattern)
 {
     if(BoardState->getBoard()==Goal){
         std::cout<<"Found Solution, loaded matrix is equal to final matrix";
         return 1;
     }
-    auto start = std::make_shared<Node>("Error", nullptr, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern);
+    auto start = std::make_shared<Node>('E', nullptr, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern);
     std::shared_ptr<Node> curNode;
     std::shared_ptr<Node>Children;
     std::set<matrix> hold;
@@ -103,7 +103,7 @@ if(!infile.fail()) {
 }
 int main(int argc, char* argv[]) {
     clock_t tStart = clock();
-    std::vector<std::string> pattern ;
+    std::vector<char> pattern ;
     std::vector<std::string>  fileName;
     if(argc>1) {
         fileName.assign(argv + 1, argv + argc-1);
@@ -114,7 +114,7 @@ int main(int argc, char* argv[]) {
     //STRASZNIE CHUJOWO ZROBIONE
     if(argc>2) {
         std::string str = (argv[2]);
-        std::string help;
+        char help;
         for (unsigned int i = 0; i <= 3; i++) {
             char hold = str.at(i);
             pattern.push_back(help=hold);

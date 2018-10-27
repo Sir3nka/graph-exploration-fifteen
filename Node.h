@@ -13,17 +13,17 @@
 class Node{
     typedef std::shared_ptr<Node> NodePtr;
 public:
-    Node(const std::string &actionTaken, NodePtr parent, const std::vector<std::string > & neightbours, matrix oldState, std::vector<std::string> &pattern) : actionTaken(actionTaken),
+    Node(const char &actionTaken, NodePtr parent, const std::vector<char> & neightbours, matrix oldState, std::vector<char> &pattern) : actionTaken(actionTaken),
     parent(parent),oldState(oldState) {
-        for(const auto &patternFromaAgument:pattern)
+        for(const auto &patternFromAgument:pattern)
             for (const auto &possibleMoveFromNeightbours:neightbours)
-                if(patternFromaAgument==possibleMoveFromNeightbours)
+                if(patternFromAgument == possibleMoveFromNeightbours)
                         this->posMoves.push_back(possibleMoveFromNeightbours);
 
         this->counter=0;
         if(parent != nullptr){
             this->path = parent->getPath();
-            if(actionTaken!="ERROR"){
+            if(actionTaken != 'E'){
                 path+=this->actionTaken;
             }
             counter += 1+this->parent->getCounter();
@@ -33,25 +33,25 @@ public:
     bool operator==(const Node &rhs) const;
 
     bool operator!=(const Node &rhs) const;
-    std::string operator()() ;
+    char operator()() ;
 
     matrix getState() ;
 
-    const std::vector<std::string> &getPossibleMovesForNode() const;
+    const std::vector<char> &getPossibleMovesForNode() const;
 
     NodePtr getParent() const;
 
-    const std::string &getActionTaken() const;
+    const char &getActionTaken() const;
     const std::string &getPath() const;
     std::vector<std::string> possibleMoves();
     int getCounter() const;
 
 
 private:
-    std::string actionTaken;
+    char actionTaken;
     std::string path;
     NodePtr parent;
-    std::vector<std::string> posMoves;
+    std::vector<char> posMoves;
     matrix oldState;
     int counter;
 };

@@ -37,12 +37,12 @@ public:
     }*/
     void printSize(matrix matrix);
     void setCoordinates();
-    const std::string takeAction(const std::string &where) ;
+    const char takeAction(const char &where) ;
 
     int getWCoord() const;
 
     int getHCoord() const;
-    const std::vector<std::string>  getPossibleMoves();
+    const std::vector<char>  getPossibleMoves();
 
     const matrix &getBoard() const;
 
