@@ -7,7 +7,7 @@
 Board::Board(const matrix& tab): boardSize(tab), hCoord(0), wCoord(0){}
 
 
-const char Board::takeAction(const char where) {
+const int Board::takeAction(const int where) {
 
     if (where == 'U'){
             std::swap(boardSize[hCoord][wCoord], boardSize[hCoord-1][wCoord]);
@@ -33,8 +33,8 @@ const char Board::takeAction(const char where) {
 }
 
 void Board::printSize(matrix& matrix) {
-    for(int i = 0; i <= 3; ++i){
-        for(int j = 0; j <= 3; ++j){
+    for(unsigned int i(0); i <= 3; ++i){
+        for(unsigned int j(0); j <= 3; ++j){
             std::cout<<matrix[i][j] <<"    ";
         }
         std::cout<<"\n";
@@ -53,8 +53,8 @@ int Board::getWCoord() const {
     return wCoord;
 };
 void Board::setCoordinates() {
-    for(int i = 0; i <= 3; ++i){
-        for (int j = 0; j <= 3; ++j){
+    for(unsigned int i(0); i <= 3; ++i){
+        for (unsigned int j(0); j <= 3; ++j){
             if(this->boardSize[i][j] == 0) {
                 this->wCoord = j;
                 this->hCoord = i;
@@ -62,39 +62,24 @@ void Board::setCoordinates() {
         }
     }
 }
-const std::vector<char> Board::getPossibleMoves() const{
+const std::vector<int> Board::getPossibleMoves() const{
+    std::vector<int> possibleMoves;
+    possibleMoves.reserve(4);
 
-    int x;
-    int y;
-    bool U = true;
-    bool D = true;
-    bool L = true;
-    bool R = true;
-    std::vector<char> possibleMoves;
-    for (int i = 0; i <= 3; ++i){
-        y = this->hCoord;
-        x = this->wCoord;
-        if (y > 0) {
-            if(U)
-                possibleMoves.push_back('U');
-            U = false;
-        }
-        if (y < 3) {
-            if(D)
-                possibleMoves.push_back('D');
-            D = false;
-        }
-        if (x > 0) {
-            if(L)
-                possibleMoves.push_back('L');
-            L = false;
-        }
-        if (x < 3) {
-            if(R)
-                possibleMoves.push_back('R');
-            R = false;
-        }
+
+    if (hCoord > 0) {
+        possibleMoves.emplace_back('U');
     }
+    if (hCoord < 3) {
+        possibleMoves.emplace_back('D');
+    }
+    if (wCoord > 0) {
+        possibleMoves.emplace_back('L');
+    }
+    if (wCoord < 3) {
+        possibleMoves.emplace_back('R');
+    }
+
     return possibleMoves;
 }
 

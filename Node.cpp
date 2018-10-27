@@ -4,14 +4,14 @@
 
 #include "Node.h"
 
-const std::vector<char>& Node::getPossibleMovesForNode() const {
-    return this->posMoves;
+const std::vector<int>& Node::getPossibleMovesForNode() const {
+    return posMoves;
 }
 const char& Node::getActionTaken() const {
-    return this->actionTaken;
+    return actionTaken;
 }
 std::shared_ptr<Node> Node::getParent() const {
-    return this ->parent;
+    return parent;
 }
 
 const std::string &Node::getPath() const {
@@ -36,7 +36,7 @@ bool Node::operator==(const Node &rhs) const {
 bool Node::operator!=(const Node &rhs) const {
     return !(rhs == *this);
 }
-char Node::operator() () {
+int Node::operator() () {
     for( auto&it:this->getPossibleMovesForNode())
         return it;
 }

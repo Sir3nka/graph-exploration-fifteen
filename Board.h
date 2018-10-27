@@ -21,12 +21,10 @@ private:
      *If we want to move up our hCoord will get ++ etc, that's the idea
      */
     int hCoord;
-public:
-    void setBoardSize(const matrix& boardSize);
-
-private:
     int wCoord;
     matrix boardSize;
+public:
+    void setBoardSize(const matrix& boardSize);
 public:
     Board(const matrix& tab);
     /*Board( Board &RHS){
@@ -37,12 +35,12 @@ public:
     }*/
     void printSize(matrix& matrix);
     void setCoordinates();
-    const char takeAction(const char where) ;
+    const int takeAction(const int where) ;
 
     int getWCoord() const;
 
     int getHCoord() const;
-    const std::vector<char> getPossibleMoves() const;
+    const std::vector<int> getPossibleMoves() const;
 
     const matrix& getBoard() const;
 

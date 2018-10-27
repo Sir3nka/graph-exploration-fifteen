@@ -12,13 +12,22 @@
 
 class Node{
     typedef std::shared_ptr<Node> NodePtr;
+private:
+    NodePtr parent;
+    matrix oldState;
+    std::vector<int> posMoves;
+    std::string path;
+    int counter;
+    int actionTaken;
 public:
-    Node(const char actionTaken, NodePtr parent, const std::vector<char>& neightbours, matrix oldState, std::vector<char>& pattern): actionTaken(actionTaken),
+    Node(const int actionTaken, NodePtr parent, const std::vector<int>& neightbours, matrix oldState, std::vector<int>& pattern): actionTaken(actionTaken),
     parent(parent), oldState(oldState), counter(0) {
+        posMoves.reserve(4);
+
         for(const auto &patternFromAgument:pattern)
             for (const auto &possibleMoveFromNeightbours:neightbours)
                 if(patternFromAgument == possibleMoveFromNeightbours)
-                        this->posMoves.push_back(possibleMoveFromNeightbours);
+                        this->posMoves.emplace_back(possibleMoveFromNeightbours);
 
         if(parent != nullptr){
             this->path = parent->getPath();
@@ -32,11 +41,11 @@ public:
     bool operator==(const Node &rhs) const;
 
     bool operator!=(const Node &rhs) const;
-    char operator()();
+    int operator()();
 
     matrix& getState();
 
-    const std::vector<char>& getPossibleMovesForNode() const;
+    const std::vector<int>& getPossibleMovesForNode() const;
 
     NodePtr getParent() const;
 
@@ -44,14 +53,5 @@ public:
     const std::string& getPath() const;
     std::vector<std::string> possibleMoves();
     int getCounter() const;
-
-
-private:
-    char actionTaken;
-    std::string path;
-    NodePtr parent;
-    std::vector<char> posMoves;
-    matrix oldState;
-    int counter;
 };
 #endif //FIFTEENGAME_NODE_H
