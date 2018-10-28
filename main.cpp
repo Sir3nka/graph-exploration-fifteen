@@ -81,10 +81,10 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
 }
 
 void Visit(std::shared_ptr<Board> BoardState, std::shared_ptr<Node> cN, std::stack<std::shared_ptr<Node>> &ol,std::unordered_set<matrix, VectorHash> &explored, std::vector<std::string> &pattern,
-        std::set<matrix> &hold,int &counter
+        std::set<matrix> &hold,int &counter,std::string &it
 ) {
-    if(counter<20) {
-        for (const auto &it:cN->getPossibleMovesForNode()) {
+    if(counter<2)
+     {
             counter += 1;
             BoardState->setBoardSize(cN->getState());
             BoardState->setCoordinates();
@@ -95,19 +95,21 @@ void Visit(std::shared_ptr<Board> BoardState, std::shared_ptr<Node> cN, std::sta
                 std::cout << Children->getPath();
                 return;
             }
-            if (explored.find(Children->getState()) != explored.end())
-                continue;
-            if (hold.find(Children->getState()) != hold.end())
-                continue;
-            ol.push(Children);
-            hold.insert(Children->getState());
-            //std::cout <<" EXPLORED SIZE " << explored.size() << " OPEN LIST " << ol.size() << std::endl;
-            Visit(BoardState, Children, ol, explored, pattern, hold, counter);
+            for(auto it:Children->getPossibleMovesForNode()) {
+                if(hold.find(Children->getState())!=hold.end())
+                    continue;
+                ol.push(Children);
+                hold.insert(Children->getState());
+
+                if(explored.find(Children->getState())!=explored.end())
+                    continue;
+                Visit(BoardState, Children, ol, explored, pattern, hold, counter, it);
+                explored.insert(Children->getState());
+            }
 
         }
-    }
     return;
-}
+    }
 
 
 int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::string> &pattern){
@@ -135,7 +137,12 @@ int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
             return 1;
         }
         else {
-            Visit(BoardState, curNode,open_list,explored, pattern, hold, rc);
+            for (auto it:curNode->getPossibleMovesForNode()) {
+                Visit(BoardState, curNode, open_list, explored, pattern, hold, rc, it);
+                BoardState->printSize(BoardState->getBoard());
+                if(explored.find(curNode->getState())!=explored.end())
+                    continue;
+            }
             }
         }
         return 1;
@@ -165,7 +172,6 @@ if(!infile.fail()) {
     return Goal;
 }
 int main(int argc, char* argv[]) {
-    clock_t tStart = clock();
     std::vector<std::string> pattern ;
     std::vector<std::string>  fileName;
     if(argc>1) {
@@ -190,6 +196,7 @@ int main(int argc, char* argv[]) {
     std::string A;
     std::cout <<"What method \n";
     std::cin >> A;
+    clock_t tStart = clock();
     if(A=="BFS")
     BFS(Test, Goal, pattern);
     if(A=="DFS")
