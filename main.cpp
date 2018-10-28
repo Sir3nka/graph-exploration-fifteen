@@ -38,10 +38,8 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
     auto start = std::make_shared<Node>("Error", nullptr, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern);
     std::shared_ptr<Node> curNode;
     std::shared_ptr<Node>Children;
-    std::set<size_t> hold;
     std::queue<std::shared_ptr<Node>> open_list;
     std::unordered_set<size_t> explored;
-
     open_list.push(start);
     while(!open_list.empty()){
         curNode = open_list.front();
@@ -57,25 +55,17 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
                 BoardState->setBoardSize(curNode->getState());
                 BoardState->setCoordinates();
                 BoardState->takeAction(it);
-
                 Children = std::make_shared<Node> (it,curNode, BoardState->getPossibleMoves() , BoardState->getBoard(), pattern);
-
                 if(explored.find(VectorHash()(Children->getState()) ) != explored.end())
                     continue;
-
                 if(BoardState->getBoard()==Goal) {
                     std::cout << Children->getCounter() << std::endl;
                     std::cout << Children->getPath() ;
                     return 1;
                 }
-
-               if(hold.find(VectorHash()(Children->getState()) ) != hold.end())
-                   continue;
                open_list.push(Children);
-               hold.insert(VectorHash()(Children->getState()) );
             }
         }
-
     }
     return 15;
 }
@@ -89,7 +79,6 @@ int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
     auto start = std::make_shared<Node>("Error", nullptr, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern);
     std::shared_ptr<Node> curNode;
     std::shared_ptr<Node>Children;
-    std::set<size_t> hold;
     std::stack<std::shared_ptr<Node>> open_list;
     std::set<size_t> explored;
 
@@ -108,22 +97,15 @@ int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
                 BoardState->setBoardSize(curNode->getState());
                 BoardState->setCoordinates();
                 BoardState->takeAction(it);
-
                 Children = std::make_shared<Node> (it,curNode, BoardState->getPossibleMoves() , BoardState->getBoard(), pattern);
-
                 if(explored.find(VectorHash()(Children->getState()) ) != explored.end() && Children->getCounter()<=20)
                     continue;
-
                 if(BoardState->getBoard()==Goal) {
                     std::cout << Children->getCounter() << std::endl;
                     std::cout << Children->getPath() ;
                     return 1;
                 }
-
-                if(hold.find(VectorHash()(Children->getState())) != hold.end())
-                    continue;
                 open_list.push(Children);
-                hold.insert(VectorHash()(Children->getState()));
             }
         }
 
