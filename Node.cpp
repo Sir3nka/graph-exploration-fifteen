@@ -36,14 +36,8 @@ bool Node::operator==(const Node &rhs) const {
 bool Node::operator!=(const Node &rhs) const {
     return !(rhs == *this);
 }
-std::string Node::operator() () {
-    std::string toReturn;
-    for( auto&it:this->oldState)
-        for( auto &itt:it)
-            toReturn.append(std::to_string(itt));
-    for( auto&it:this->getPossibleMovesForNode())
-            toReturn.append(it);
-    return toReturn;
+Node Node::operator() (matrix& arg, size_t& value) {
+
 }
 
 int Node::getCounter() const {

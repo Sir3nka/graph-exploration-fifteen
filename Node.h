@@ -32,7 +32,7 @@ public:
     bool operator==(const Node &rhs) const;
 
     bool operator!=(const Node &rhs) const;
-    std::string operator()() ;
+    Node operator()(matrix &arg, size_t& value) ;
 
     matrix getState() ;
 
