@@ -70,7 +70,7 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
     return 15;
 }
 
-int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::string> &pattern)
+int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::string> &pattern, int rec)
 {
     if(BoardState->getBoard()==Goal){
         std::cout<<"Found Solution, loaded matrix is equal to final matrix";
@@ -80,8 +80,7 @@ int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
     std::shared_ptr<Node> curNode;
     std::shared_ptr<Node>Children;
     std::stack<std::shared_ptr<Node>> open_list;
-    std::set<size_t> explored;
-
+    std::unordered_set<size_t> explored;
     open_list.push(start);
     while(!open_list.empty()){
         curNode = open_list.top();
@@ -98,7 +97,9 @@ int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
                 BoardState->setCoordinates();
                 BoardState->takeAction(it);
                 Children = std::make_shared<Node> (it,curNode, BoardState->getPossibleMoves() , BoardState->getBoard(), pattern);
-                if(explored.find(VectorHash()(Children->getState()) ) != explored.end() && Children->getCounter()<=20)
+                if(explored.find(VectorHash()(Children->getState()) ) != explored.end())
+                    continue;
+                if(Children->getPath().length()>=rec)
                     continue;
                 if(BoardState->getBoard()==Goal) {
                     std::cout << Children->getCounter() << std::endl;
@@ -164,8 +165,12 @@ int main(int argc, char* argv[]) {
     clock_t tStart = clock();
     if(A=="BFS")
     BFS(Test, Goal, pattern);
-    if(A=="DFS")
-    DFS(Test, Goal, pattern);
+    if(A=="DFS") {
+        int rec;
+        std::cout<<"NUMBER OF RECURSIONS\n";
+        std::cin>>rec;
+        DFS(Test, Goal, pattern, rec);
+    }
     printf("\nTime taken: %.3fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
     return 0;
