@@ -17,10 +17,6 @@ std::shared_ptr<Node> Node::getParent() const {
 const std::string &Node::getPath() const {
     return path;
 }
-std::vector<std::string> Node::possibleMoves(){
-
-
-}
 
 matrix& Node::getState()  {
     return oldState;
@@ -39,6 +35,7 @@ bool Node::operator!=(const Node &rhs) const {
 int Node::operator() () {
     for( auto&it:this->getPossibleMovesForNode())
         return it;
+    return 1;
 }
 
 int Node::getCounter() const {

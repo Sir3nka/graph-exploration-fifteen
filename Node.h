@@ -51,7 +51,6 @@ public:
 
     const char &getActionTaken() const;
     const std::string& getPath() const;
-    std::vector<std::string> possibleMoves();
     int getCounter() const;
 };
 #endif //FIFTEENGAME_NODE_H

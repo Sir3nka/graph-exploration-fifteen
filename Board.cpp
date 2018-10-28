@@ -83,7 +83,7 @@ const std::vector<int> Board::getPossibleMoves() const{
     return possibleMoves;
 }
 
-const matrix& Board::getBoard() const {
+const matrix &Board::getBoard() const {
     return boardSize;
 }
 
