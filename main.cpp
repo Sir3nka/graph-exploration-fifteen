@@ -80,32 +80,33 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
     return 15;
 }
 
-void Visit(std::shared_ptr<Board> BoardState, std::shared_ptr<Node> cN, std::stack<std::shared_ptr<Node>> ol,std::unordered_set<matrix, VectorHash> explored, std::vector<std::string> &pattern,    std::set<matrix> hold,
-        int rec
+void Visit(std::shared_ptr<Board> BoardState, std::shared_ptr<Node> cN, std::stack<std::shared_ptr<Node>> &ol,std::unordered_set<matrix, VectorHash> &explored, std::vector<std::string> &pattern,
+        std::set<matrix> &hold,int &counter
 ) {
-    for (const auto &it:cN->getPossibleMovesForNode()) {
-        if(rec>=20)
-            break;
-        rec += 1;
-        BoardState->printSize(BoardState->getBoard());
-        BoardState->setBoardSize(cN->getState());
-        BoardState->setCoordinates();
-        BoardState->takeAction(it);
-        auto Children = std::make_shared<Node>(it, cN, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern);
-        if (BoardState->getBoard() == Goal) {
-            std::cout << Children->getCounter() << std::endl;
-            std::cout << Children->getPath();
-        }
-        if (explored.find(Children->getState()) != explored.end())
-            continue;
-        explored.insert(cN->getState());
-        if (hold.find(Children->getState()) != hold.end())
-            continue;
-        ol.push(Children);
-        hold.insert(Children->getState());
-        Visit(BoardState, Children, ol, explored, pattern, hold, 0);
+    if(counter<20) {
+        for (const auto &it:cN->getPossibleMovesForNode()) {
+            counter += 1;
+            BoardState->setBoardSize(cN->getState());
+            BoardState->setCoordinates();
+            BoardState->takeAction(it);
+            auto Children = std::make_shared<Node>(it, cN, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern);
+            if (BoardState->getBoard() == Goal) {
+                std::cout << Children->getCounter() << std::endl;
+                std::cout << Children->getPath();
+                return;
+            }
+            if (explored.find(Children->getState()) != explored.end())
+                continue;
+            if (hold.find(Children->getState()) != hold.end())
+                continue;
+            ol.push(Children);
+            hold.insert(Children->getState());
+            //std::cout <<" EXPLORED SIZE " << explored.size() << " OPEN LIST " << ol.size() << std::endl;
+            Visit(BoardState, Children, ol, explored, pattern, hold, counter);
 
+        }
     }
+    return;
 }
 
 
@@ -123,17 +124,18 @@ int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
 
     open_list.push(start);
     while(!open_list.empty()){
+        int rc=0;
         curNode = open_list.top();
         explored.insert(curNode->getState());
+        //std::cout << " TEST " << open_list.size() <<std::endl;
         open_list.pop();
-        int rc=0;
         if(BoardState->getBoard()==Goal){
             std::cout << curNode->getCounter() << std::endl;
             std::cout << curNode->getPath() ;
             return 1;
         }
         else {
-            Visit(BoardState, curNode,open_list,explored, pattern, hold, 0);
+            Visit(BoardState, curNode,open_list,explored, pattern, hold, rc);
             }
         }
         return 1;
