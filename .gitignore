@@ -1,0 +1,6 @@
+#CLion cache
+.idea/
+cmake-build-debug/
+
+#Visual Studio cache
+.vs/
