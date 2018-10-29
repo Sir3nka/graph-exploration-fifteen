@@ -182,21 +182,21 @@ int main(int argc, char* argv[]) {
     Test->setCoordinates();
     std::string methodName;
     methodName.reserve(3);
-    std::cout <<"What method \n";
-    std::cin >> methodName;
+    //std::cout <<"What method \n";
+    //std::cin >> methodName;
     clock_t tStart;
-    if(methodName == "BFS") {
+    //if(methodName == "BFS") {
         tStart = clock();
         BFS(Test, Goal, pattern);
-    }
-    if(methodName == "DFS") {
-        int rec;
-        std::cout<<"NUMBER OF RECURSIONS\n";
-        std::cin>>rec;
-        tStart = clock();
-        DFS(Test, Goal, pattern, rec);
-    }
-    printf("\nTime taken: %.3fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+   //}
+   //if(methodName == "DFS") {
+   //    int rec;
+   //    std::cout<<"NUMBER OF RECURSIONS\n";
+   //    std::cin>>rec;
+   //    tStart = clock();
+   //    DFS(Test, Goal, pattern, rec);
+   //}
+   printf("\nTime taken: %.3fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
     return 0;
 }
