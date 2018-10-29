@@ -46,8 +46,8 @@ Board::~Board() {
 }
 
 void Board::setCoordinates() {
-    for(uint_fast8_t i(0); i <= 3; ++i){
-        for (uint_fast8_t  j(0); j <= 3; ++j){
+    for(uint_fast8_t i(0); i != 4; ++i){
+        for (uint_fast8_t j(0); j != 4; ++j){
             if(this->boardSize[i][j] == 0) {
                 this->wCoord = j;
                 this->hCoord = i;
@@ -80,6 +80,6 @@ const matrix &Board::getBoard() const {
     return boardSize;
 }
 
-void Board::setBoardSize(const matrix &boardSize) {
-    Board::boardSize = boardSize;
+void Board::setBoardSize(const matrix& newBoardSize) {
+    boardSize = newBoardSize;
 }

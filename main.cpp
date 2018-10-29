@@ -26,34 +26,33 @@ struct VectorBFSHash{
         uint_fast16_t  seed(0);
         for(auto & it:v)
             for(auto & itt:it)
-                seed ^=hasher(itt)+0x933779b9+(seed<<6) + (seed>>2);
+                seed ^= hasher(itt) + 0x933779b9 + (seed<<6) + (seed>>2);
             return seed;
     }
 };
 struct VectorDFSHash{
     //
-    int operator()(const matrix &v)const{
+    inline int operator()(const matrix &v)const{
         std::hash<int> hasher;
         int seed(0);
         for(auto & it:v)
             for(auto & itt:it)
-                seed ^=hasher(itt)+0x933779b9+(seed<<6) + (seed>>2);
+                seed ^= hasher(itt) + 0x933779b9 +(seed<<6) + (seed>>2);
         return seed;
     }
 };
-int BFS (std::shared_ptr<Board> BoardState, matrix& result, std::vector<uint_fast16_t>& pattern)
+int BFS (std::shared_ptr<Board> BoardState, std::vector<uint_fast16_t>& pattern)
 {
     if(BoardState->getBoard() == Goal){
         std::cout<<"Found Solution, loaded matrix is equal to final matrix";
         return 1;
     }
-    auto start(std::make_shared<Node>('E', nullptr, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern));
 
     std::shared_ptr<Node> curNode;
-    std::shared_ptr<Node>Children;
+    std::shared_ptr<Node> Children;
     std::queue<std::shared_ptr<Node>> open_list;
-    std::unordered_set<size_t> explored;
-    open_list.push(start);
+    std::unordered_set<uint_fast16_t> explored;
+    open_list.push(std::make_shared<Node>('E', nullptr, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern));
 
     while(!open_list.empty()){
         curNode = open_list.front();
@@ -72,40 +71,40 @@ int BFS (std::shared_ptr<Board> BoardState, matrix& result, std::vector<uint_fas
                 BoardState->takeAction(it);
 
 
-                Children = std::make_shared<Node> (it, curNode, BoardState->getPossibleMoves() , BoardState->getBoard(), pattern);
+                Children = std::make_shared<Node> (it, curNode, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern);
 
                 if(explored.find(VectorBFSHash()(Children->getState()) ) != explored.end())
                     continue;
-
-                if(BoardState->getBoard()==Goal) {
+                else if(BoardState->getBoard() == Goal) {
                     std::cout << Children->getCounter() << std::endl;
                     std::cout << Children->getPath();
                     return 1;
                 }
-               open_list.push(Children);
+                open_list.push(Children);
             }
         }
     }
     return 15;
 }
 
-int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<uint_fast16_t>& pattern, uint_fast16_t rec)
+int DFS (std::shared_ptr<Board> BoardState, std::vector<uint_fast16_t>& pattern, uint_fast16_t maxRecurionsNumber)
 {
     if(BoardState->getBoard() == Goal){
         std::cout<<"Found Solution, loaded matrix is equal to final matrix";
         return 1;
     }
-    auto start = std::make_shared<Node>('E', nullptr, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern);
+
     std::shared_ptr<Node> curNode;
     std::shared_ptr<Node> Children;
     std::stack<std::shared_ptr<Node>> open_list;
-    std::unordered_set<size_t> explored;
-    open_list.push(start);
+    std::unordered_set<int> explored;
+    open_list.push(std::make_shared<Node>('E', nullptr, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern));
 
     while(!open_list.empty()){
         curNode = open_list.top();
         explored.insert(VectorDFSHash()(curNode->getState()));
         open_list.pop();
+
         if(BoardState->getBoard() == Goal){
             std::cout << curNode->getCounter() << std::endl;
             std::cout << curNode->getPath() ;
@@ -118,15 +117,13 @@ int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<uint_fas
                 BoardState->takeAction(it);
 
 
-                Children = std::make_shared<Node> (it,curNode, BoardState->getPossibleMoves() , BoardState->getBoard(), pattern);
+                Children = std::make_shared<Node> (it, curNode, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern);
 
-                if(explored.find(VectorDFSHash()(Children->getState()) ) != explored.end())
+                if(Children->getPath().length() >= maxRecurionsNumber)
                     continue;
-
-                if(Children->getPath().length() >= rec)
+                else if(explored.find(VectorDFSHash()(Children->getState()) ) != explored.end())
                     continue;
-
-                if(BoardState->getBoard() == Goal) {
+                else if(BoardState->getBoard() == Goal) {
                     std::cout << Children->getCounter() << std::endl;
                     std::cout << Children->getPath() ;
                     return 1;
@@ -184,7 +181,7 @@ int main(int argc, char* argv[]) {
     //STRASZNIE CHUJOWO ZROBIONE
     if(argc>2) {
         std::string str(argv[2]);
-        for (unsigned char i(0); i <= 3; ++i) {
+        for (unsigned char i(0); i < 4; ++i) {
             pattern.emplace_back(str.at(i));
         }
     }
@@ -196,23 +193,25 @@ int main(int argc, char* argv[]) {
     std::string methodName;
     methodName.reserve(3);
 
-    std::cout << "What method \n";
-    std::cin >> methodName;
 
     clock_t tStart;
 
+    std::cout << "What method \n";
+    std::cin >> methodName;
+
     if(methodName == "BFS") {
         tStart = clock();
-        BFS(Test, Goal, pattern);
+        BFS(Test, pattern);
    }
    else if(methodName == "DFS") {
        uint_fast16_t maxRecurionsNumber;
        std::cout<<"NUMBER OF RECURSIONS\n";
        std::cin>>maxRecurionsNumber;
        tStart = clock();
-       DFS(Test, Goal, pattern, maxRecurionsNumber);
+       DFS(Test, pattern, maxRecurionsNumber);
    }
    printf("\nTime taken: %.3fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-
-    return 0;
+   
+   return 0;
 }
+

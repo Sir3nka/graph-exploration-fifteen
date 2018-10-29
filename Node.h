@@ -13,9 +13,9 @@
 class Node{
     typedef std::shared_ptr<Node> NodePtr;
 private:
-    NodePtr parent;
     matrix oldState;
     std::vector<uint_fast16_t> posMoves;
+    NodePtr parent;
     std::string path;
     unsigned short counter;
     unsigned short actionTaken;
@@ -24,9 +24,9 @@ public:
     parent(parent), oldState(oldState), counter(0) {
         posMoves.reserve(4);
 
-        for(const auto &patternFromAgument:pattern)
+        for(const auto &patternFromArgument:pattern)
             for (const auto &possibleMoveFromNeightbours:neightbours)
-                if(patternFromAgument == possibleMoveFromNeightbours)
+                if(patternFromArgument == possibleMoveFromNeightbours)
                         this->posMoves.emplace_back(possibleMoveFromNeightbours);
 
         if(parent != nullptr){
@@ -44,7 +44,6 @@ public:
     uint_fast16_t operator()();
 
     matrix& getState();
-
     const std::vector<uint_fast16_t>& getPossibleMovesForNode() const;
 
     NodePtr getParent() const;
