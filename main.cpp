@@ -9,6 +9,7 @@
 #include <fstream>
 #include <sstream>
 #include <time.h>
+#include <stack>
 
 
 matrix Goal =  {{1,2,3,4},
@@ -35,18 +36,19 @@ int BFS (std::shared_ptr<Board> BoardState, matrix& result, std::vector<int>& pa
         return 1;
     }
     auto start(std::make_shared<Node>('E', nullptr, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern));
-    std::shared_ptr<Node> curNode;
-    std::shared_ptr<Node> Children;
-    std::set<matrix> hold;
-    std::queue<std::shared_ptr<Node>> open_list;
-    std::unordered_set<matrix, VectorHash> explored;
 
+    std::shared_ptr<Node> curNode;
+    std::shared_ptr<Node>Children;
+    std::queue<std::shared_ptr<Node>> open_list;
+    std::unordered_set<size_t> explored;
     open_list.push(start);
+
     while(!open_list.empty()){
         curNode = open_list.front();
-        explored.insert(curNode->getState());
+        explored.insert(VectorHash()(curNode->getState()));
         open_list.pop();
-        if(BoardState->getBoard()==Goal){
+
+        if(BoardState->getBoard() == Goal){
                 std::cout << curNode->getCounter() << std::endl;
                 std::cout << curNode->getPath();
                 return 1;
@@ -57,21 +59,64 @@ int BFS (std::shared_ptr<Board> BoardState, matrix& result, std::vector<int>& pa
                 BoardState->setCoordinates();
                 BoardState->takeAction(it);
 
-                Children = std::make_shared<Node> (it, curNode, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern);
 
-                if(explored.find(Children->getState()) != explored.end())
+                Children = std::make_shared<Node> (it, curNode, BoardState->getPossibleMoves() , BoardState->getBoard(), pattern);
+
+                if(explored.find(VectorHash()(Children->getState()) ) != explored.end())
                     continue;
 
-                if(BoardState->getBoard() == Goal) {
+                if(BoardState->getBoard()==Goal) {
                     std::cout << Children->getCounter() << std::endl;
                     std::cout << Children->getPath();
                     return 1;
                 }
-
-               if(hold.find(Children->getState()) != hold.end())
-                   continue;
                open_list.push(Children);
-               hold.insert(Children->getState());
+            }
+        }
+    }
+    return 15;
+}
+
+int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<int>& pattern, int rec)
+{
+    if(BoardState->getBoard() == Goal){
+        std::cout<<"Found Solution, loaded matrix is equal to final matrix";
+        return 1;
+    }
+    auto start = std::make_shared<Node>('E', nullptr, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern);
+    std::shared_ptr<Node> curNode;
+    std::shared_ptr<Node>Children;
+    std::stack<std::shared_ptr<Node>> open_list;
+    std::unordered_set<size_t> explored;
+    open_list.push(start);
+
+    while(!open_list.empty()){
+        curNode = open_list.top();
+        explored.insert(VectorHash()(curNode->getState()));
+        open_list.pop();
+        if(BoardState->getBoard()==Goal){
+            std::cout << curNode->getCounter() << std::endl;
+            std::cout << curNode->getPath() ;
+            return 1;
+        }
+        else {
+            for (const auto &it:curNode->getPossibleMovesForNode()){
+                BoardState->setBoardSize(curNode->getState());
+                BoardState->setCoordinates();
+                BoardState->takeAction(it);
+                Children = std::make_shared<Node> (it,curNode, BoardState->getPossibleMoves() , BoardState->getBoard(), pattern);
+                if(explored.find(VectorHash()(Children->getState()) ) != explored.end())
+                    continue;
+
+                if(Children->getPath().length() >= rec)
+                    continue;
+
+                if(BoardState->getBoard() == Goal) {
+                    std::cout << Children->getCounter() << std::endl;
+                    std::cout << Children->getPath() ;
+                    return 1;
+                }
+                open_list.push(Children);
             }
         }
 
@@ -106,8 +151,6 @@ matrix parserToMatrix(std::string& arg) {
     return Goal;
 }
 int main(int argc, char* argv[]) {
-    clock_t tStart = clock();
-
     std::vector<int> pattern;
     pattern.reserve(3);
 
@@ -116,7 +159,6 @@ int main(int argc, char* argv[]) {
 
     std::string Hold;
     Hold.reserve(60);
-
     if(argc>1) {
         fileName.assign(argv + 1, argv + argc-1);
     }
@@ -133,8 +175,19 @@ int main(int argc, char* argv[]) {
     matrix Testuje(parserToMatrix(Hold));
     auto Test(std::make_shared<Board>(Testuje));
     Test->setCoordinates();
-
+    int a =20;
+    std::string A;
+    std::cout <<"What method \n";
+    std::cin >> A;
+    clock_t tStart = clock();
+    if(A=="BFS")
     BFS(Test, Goal, pattern);
+    if(A=="DFS") {
+        int rec;
+        std::cout<<"NUMBER OF RECURSIONS\n";
+        std::cin>>rec;
+        DFS(Test, Goal, pattern, rec);
+    }
     printf("\nTime taken: %.3fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
 
     return 0;
