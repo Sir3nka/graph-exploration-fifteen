@@ -94,7 +94,7 @@ int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<int>& pa
         curNode = open_list.top();
         explored.insert(VectorHash()(curNode->getState()));
         open_list.pop();
-        if(BoardState->getBoard()==Goal){
+        if(BoardState->getBoard() == Goal){
             std::cout << curNode->getCounter() << std::endl;
             std::cout << curNode->getPath() ;
             return 1;
@@ -104,7 +104,10 @@ int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<int>& pa
                 BoardState->setBoardSize(curNode->getState());
                 BoardState->setCoordinates();
                 BoardState->takeAction(it);
+
+
                 Children = std::make_shared<Node> (it,curNode, BoardState->getPossibleMoves() , BoardState->getBoard(), pattern);
+
                 if(explored.find(VectorHash()(Children->getState()) ) != explored.end())
                     continue;
 
@@ -132,6 +135,7 @@ matrix parserToMatrix(std::string& arg) {
         std::string String;
         int a;
         std::vector<int> Line;
+
         while (getline(infile, String)) {
             Line.reserve(3);
             //Kinda lazy solution
@@ -175,14 +179,15 @@ int main(int argc, char* argv[]) {
     matrix Testuje(parserToMatrix(Hold));
     auto Test(std::make_shared<Board>(Testuje));
     Test->setCoordinates();
-    int a =20;
-    std::string A;
+    int a = 20;
+    std::string methodName;
+    methodName.reserve(3);
     std::cout <<"What method \n";
-    std::cin >> A;
+    std::cin >> methodName;
     clock_t tStart = clock();
-    if(A=="BFS")
+    if(methodName == "BFS")
     BFS(Test, Goal, pattern);
-    if(A=="DFS") {
+    if(methodName == "DFS") {
         int rec;
         std::cout<<"NUMBER OF RECURSIONS\n";
         std::cin>>rec;
