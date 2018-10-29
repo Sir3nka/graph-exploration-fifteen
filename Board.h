@@ -20,8 +20,8 @@ private:
     /*So i tought we will be moving based on coordinates of our blank which is 0
      *If we want to move up our hCoord will get ++ etc, that's the idea
      */
-    unsigned short hCoord;
-    unsigned short wCoord;
+    uint_fast16_t hCoord;
+    uint_fast16_t wCoord;
     matrix boardSize;
 public:
     void setBoardSize(const matrix& boardSize);
@@ -35,9 +35,9 @@ public:
     }*/
     void printSize(matrix& matrix);
     void setCoordinates();
-    const unsigned short takeAction(const unsigned short where);
+    const uint_fast16_t takeAction(const uint_fast16_t where);
 
-    const std::vector<unsigned short> getPossibleMoves() const;
+    const std::vector<uint_fast16_t> getPossibleMoves() const;
 
     const matrix& getBoard() const;
 

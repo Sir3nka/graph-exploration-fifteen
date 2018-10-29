@@ -4,7 +4,7 @@
 
 #include "Node.h"
 
-const std::vector<unsigned short>& Node::getPossibleMovesForNode() const {
+const std::vector<uint_fast16_t>& Node::getPossibleMovesForNode() const {
     return posMoves;
 }
 std::shared_ptr<Node> Node::getParent() const {
@@ -29,12 +29,12 @@ bool Node::operator==(const Node &rhs) const {
 bool Node::operator!=(const Node &rhs) const {
     return !(rhs == *this);
 }
-unsigned short Node::operator() () {
+uint_fast16_t Node::operator() () {
     for( auto&it:this->getPossibleMovesForNode())
         return it;
     return 1;
 }
 
-unsigned short Node::getCounter() const {
+uint_fast16_t Node::getCounter() const {
     return counter;
 }

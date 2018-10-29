@@ -15,12 +15,12 @@ class Node{
 private:
     NodePtr parent;
     matrix oldState;
-    std::vector<unsigned short> posMoves;
+    std::vector<uint_fast16_t> posMoves;
     std::string path;
     unsigned short counter;
     unsigned short actionTaken;
 public:
-    Node(const unsigned short actionTaken, NodePtr parent, const std::vector<unsigned short>& neightbours, matrix oldState, std::vector<unsigned short>& pattern): actionTaken(actionTaken),
+    Node(const uint_fast16_t actionTaken, NodePtr parent, const std::vector<uint_fast16_t>& neightbours, matrix oldState, std::vector<uint_fast16_t>& pattern): actionTaken(actionTaken),
     parent(parent), oldState(oldState), counter(0) {
         posMoves.reserve(4);
 
@@ -41,15 +41,15 @@ public:
     bool operator==(const Node &rhs) const;
 
     bool operator!=(const Node &rhs) const;
-    unsigned short operator()();
+    uint_fast16_t operator()();
 
     matrix& getState();
 
-    const std::vector<unsigned short>& getPossibleMovesForNode() const;
+    const std::vector<uint_fast16_t>& getPossibleMovesForNode() const;
 
     NodePtr getParent() const;
 
     const std::string& getPath() const;
-    unsigned short getCounter() const;
+    uint_fast16_t getCounter() const;
 };
 #endif //FIFTEENGAME_NODE_H

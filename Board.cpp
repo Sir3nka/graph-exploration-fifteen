@@ -7,7 +7,7 @@
 Board::Board(const matrix& tab): boardSize(tab), hCoord(0), wCoord(0){}
 
 
-const unsigned short Board::takeAction(const unsigned short where) {
+const uint_fast16_t Board::takeAction(const uint_fast16_t where) {
 
     if (where == 'U'){
             std::swap(boardSize[hCoord][wCoord], boardSize[hCoord-1][wCoord]);
@@ -33,8 +33,8 @@ const unsigned short Board::takeAction(const unsigned short where) {
 }
 
 void Board::printSize(matrix& matrix) {
-    for(unsigned short i(0); i <= 3; ++i){
-        for(unsigned short j(0); j <= 3; ++j){
+    for(unsigned char i(0); i <= 3; ++i){
+        for(unsigned char j(0); j <= 3; ++j){
             std::cout<<matrix[i][j] <<"    ";
         }
         std::cout<<"\n";
@@ -46,8 +46,8 @@ Board::~Board() {
 }
 
 void Board::setCoordinates() {
-    for(unsigned short i(0); i <= 3; ++i){
-        for (unsigned short j(0); j <= 3; ++j){
+    for(uint_fast8_t i(0); i <= 3; ++i){
+        for (uint_fast8_t  j(0); j <= 3; ++j){
             if(this->boardSize[i][j] == 0) {
                 this->wCoord = j;
                 this->hCoord = i;
@@ -55,8 +55,8 @@ void Board::setCoordinates() {
         }
     }
 }
-const std::vector<unsigned short> Board::getPossibleMoves() const{
-    std::vector<unsigned short> possibleMoves;
+const std::vector<uint_fast16_t> Board::getPossibleMoves() const{
+    std::vector<uint_fast16_t> possibleMoves;
     possibleMoves.reserve(4);
 
 
