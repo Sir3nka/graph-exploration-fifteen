@@ -27,7 +27,10 @@ public:
             }
             counter += 1+this->parent->getCounter();
         }
+        this->seed = hashGenerator(oldState);
     }
+
+    size_t getSeed() const;
 
     bool operator==(const Node &rhs) const;
 
@@ -53,5 +56,9 @@ private:
     std::vector<std::string> posMoves;
     matrix oldState;
     int counter;
-};
+    size_t seed;
+    size_t hashGenerator(const matrix &v)const;
+
+    };
+
 #endif //FIFTEENGAME_NODE_H

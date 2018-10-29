@@ -21,6 +21,14 @@ std::vector<std::string> Node::possibleMoves(){
 
 
 }
+size_t Node::hashGenerator(const matrix &v)const{
+    std::hash<int> hasher;
+    size_t seed=0;
+    for(auto & it:v)
+        for(auto & itt:it)
+            seed ^=hasher(itt)+0x933779b9+(seed<<6) + (seed>>2);
+    return seed;
+}
 
 matrix Node::getState()  {
     return oldState;
@@ -42,4 +50,8 @@ Node Node::operator() (matrix& arg, size_t& value) {
 
 int Node::getCounter() const {
     return counter;
+}
+
+size_t Node::getSeed() const {
+    return seed;
 }

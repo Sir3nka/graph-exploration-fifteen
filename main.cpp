@@ -19,16 +19,6 @@ matrix Goal ={{1,2,3,4},
 /*
  * Fajna funkcja haszujaca wiem
  */
-struct VectorHash{
-    size_t operator()(const matrix &v)const{
-        std::hash<int> hasher;
-        size_t seed=0;
-        for(auto & it:v)
-            for(auto & itt:it)
-                seed ^=hasher(itt)+0x933779b9+(seed<<6) + (seed>>2);
-            return seed;
-    }
-};
 int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::string> &pattern)
 {
     if(BoardState->getBoard()==Goal){
@@ -43,7 +33,7 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
     open_list.push(start);
     while(!open_list.empty()){
         curNode = open_list.front();
-        explored.insert(VectorHash()(curNode->getState()));
+        explored.insert(curNode->getSeed());
         open_list.pop();
         if(BoardState->getBoard()==Goal){
                 std::cout << curNode->getCounter() << std::endl;
@@ -56,7 +46,7 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
                 BoardState->setCoordinates();
                 BoardState->takeAction(it);
                 Children = std::make_shared<Node> (it,curNode, BoardState->getPossibleMoves() , BoardState->getBoard(), pattern);
-                if(explored.find(VectorHash()(Children->getState()) ) != explored.end())
+                if(explored.find(Children->getSeed())  != explored.end())
                     continue;
                 if(BoardState->getBoard()==Goal) {
                     std::cout << Children->getCounter() << std::endl;
@@ -84,7 +74,7 @@ int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
     open_list.push(start);
     while(!open_list.empty()){
         curNode = open_list.top();
-        explored.insert(VectorHash()(curNode->getState()));
+        explored.insert(curNode->getSeed());
         open_list.pop();
         if(BoardState->getBoard()==Goal){
             std::cout << curNode->getCounter() << std::endl;
@@ -97,7 +87,7 @@ int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
                 BoardState->setCoordinates();
                 BoardState->takeAction(it);
                 Children = std::make_shared<Node> (it,curNode, BoardState->getPossibleMoves() , BoardState->getBoard(), pattern);
-                if(explored.find(VectorHash()(Children->getState()) ) != explored.end())
+                if(explored.find(Children->getSeed() ) != explored.end())
                     continue;
                 if(Children->getPath().length()>=rec)
                     continue;
@@ -148,7 +138,7 @@ int ASTAR(std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::st
     open_list.push(start);
     while(!open_list.empty()){
         curNode = open_list.top();
-        explored.insert(VectorHash()(curNode->getState()));
+        explored.insert(curNode->getSeed());
         open_list.pop();
         if(BoardState->getBoard()==Goal){
             std::cout << curNode->getCounter() << std::endl;
@@ -161,7 +151,7 @@ int ASTAR(std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::st
                 BoardState->setCoordinates();
                 BoardState->takeAction(it);
                 Children = std::make_shared<Node> (it,curNode, BoardState->getPossibleMoves() , BoardState->getBoard(), pattern);
-                if(explored.find(VectorHash()(Children->getState()) ) != explored.end())
+                if(explored.find(Children->getSeed())  != explored.end())
                     continue;
                 if(BoardState->getBoard()==Goal) {
                     std::cout << Children->getCounter() << std::endl;
