@@ -13,15 +13,15 @@
 #include <iostream>
 #include <vector>
 
-typedef    std::vector<std::vector<int>> matrix;
+typedef    std::vector<std::vector<unsigned short>> matrix;
 
 class Board{
 private:
     /*So i tought we will be moving based on coordinates of our blank which is 0
      *If we want to move up our hCoord will get ++ etc, that's the idea
      */
-    int hCoord;
-    int wCoord;
+    unsigned short hCoord;
+    unsigned short wCoord;
     matrix boardSize;
 public:
     void setBoardSize(const matrix& boardSize);
@@ -35,12 +35,9 @@ public:
     }*/
     void printSize(matrix& matrix);
     void setCoordinates();
-    const int takeAction(const int where) ;
+    const unsigned short takeAction(const unsigned short where);
 
-    int getWCoord() const;
-
-    int getHCoord() const;
-    const std::vector<int> getPossibleMoves() const;
+    const std::vector<unsigned short> getPossibleMoves() const;
 
     const matrix& getBoard() const;
 

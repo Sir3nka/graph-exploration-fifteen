@@ -20,16 +20,17 @@ matrix Goal =  {{1,2,3,4},
  * Fajna funkcja haszujaca wiem
  */
 struct VectorHash{
-    size_t operator()(const matrix &v)const{
-        std::hash<int> hasher;
-        size_t seed(0);
+    //
+    unsigned short operator()(const matrix &v)const{
+        std::hash<unsigned short> hasher;
+        unsigned short seed(0);
         for(auto & it:v)
             for(auto & itt:it)
                 seed ^=hasher(itt)+0x933779b9+(seed<<6) + (seed>>2);
             return seed;
     }
 };
-int BFS (std::shared_ptr<Board> BoardState, matrix& result, std::vector<int>& pattern)
+int BFS (std::shared_ptr<Board> BoardState, matrix& result, std::vector<unsigned short>& pattern)
 {
     if(BoardState->getBoard()==Goal){
         std::cout<<"Found Solution, loaded matrix is equal to final matrix";
@@ -77,7 +78,7 @@ int BFS (std::shared_ptr<Board> BoardState, matrix& result, std::vector<int>& pa
     return 15;
 }
 
-int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<int>& pattern, int rec)
+int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<unsigned short>& pattern, unsigned short rec)
 {
     if(BoardState->getBoard() == Goal){
         std::cout<<"Found Solution, loaded matrix is equal to final matrix";
@@ -133,8 +134,8 @@ matrix parserToMatrix(std::string& arg) {
         matrix Numbers;
         Numbers.reserve(3);
         std::string String;
-        int a;
-        std::vector<int> Line;
+        unsigned short a;
+        std::vector<unsigned short> Line;
 
         while (getline(infile, String)) {
             Line.reserve(3);
@@ -145,7 +146,7 @@ matrix parserToMatrix(std::string& arg) {
                     Line.emplace_back(a);
                 }
                 Numbers.emplace_back(Line);
-                std::vector<int>().swap(Line);
+                std::vector<unsigned short>().swap(Line);
             }
         }
         infile.close();
@@ -155,7 +156,7 @@ matrix parserToMatrix(std::string& arg) {
     return Goal;
 }
 int main(int argc, char* argv[]) {
-    std::vector<int> pattern;
+    std::vector<unsigned short> pattern;
     pattern.reserve(3);
 
     std::vector<std::string> fileName;
@@ -172,25 +173,27 @@ int main(int argc, char* argv[]) {
     //STRASZNIE CHUJOWO ZROBIONE
     if(argc>2) {
         std::string str(argv[2]);
-        for (unsigned int i(0); i <= 3; ++i) {
+        for (unsigned short i(0); i <= 3; ++i) {
             pattern.emplace_back(str.at(i));
         }
     }
     matrix Testuje(parserToMatrix(Hold));
     auto Test(std::make_shared<Board>(Testuje));
     Test->setCoordinates();
-    int a = 20;
     std::string methodName;
     methodName.reserve(3);
     std::cout <<"What method \n";
     std::cin >> methodName;
-    clock_t tStart = clock();
-    if(methodName == "BFS")
-    BFS(Test, Goal, pattern);
+    clock_t tStart;
+    if(methodName == "BFS") {
+        tStart = clock();
+        BFS(Test, Goal, pattern);
+    }
     if(methodName == "DFS") {
         int rec;
         std::cout<<"NUMBER OF RECURSIONS\n";
         std::cin>>rec;
+        tStart = clock();
         DFS(Test, Goal, pattern, rec);
     }
     printf("\nTime taken: %.3fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
