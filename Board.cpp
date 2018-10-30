@@ -122,3 +122,4 @@ const matrix &Board::getBoard() const {
 void Board::setBoardSize(const matrix &boardSize) {
     Board::boardSize = boardSize;
 }
+

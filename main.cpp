@@ -115,7 +115,20 @@ const int Hamming(matrix arg){
         }
         return goal;
 }
-const int Manhatann(matrix arg){
+const int Manhatann(std::shared_ptr<Board>BoardState){
+    int goal=0;
+    int x=0;
+    int y=0;
+    for(int i=0; i<=3; i++)
+        for(int j=0;j<=3;j++){
+            if(Goal[i][j]==0)
+                //Zaznaczaał żeby ignorować pole z zerem
+                continue;
+                y=BoardState->getX(Goal[i][j]).first;
+                x=BoardState->getX(Goal[i][j]).second;
+                goal+=abs( (i+j) - (y + x) );
+
+        }
 
 }
 

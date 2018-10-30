@@ -45,6 +45,18 @@ public:
     const std::vector<std::string>  getPossibleMoves();
 
     const matrix &getBoard() const;
+    inline std::pair<int, int> getX(int &val){
+        std::pair<int,int> coords;
+        for(int i=0; i<=3; i++) {
+            for (int j = 0; j <= 3; j++) {
+                if (val == this->boardSize[i][j]) {
+                    coords.first=i;
+                    coords.second=j;
+                    return coords;
+                }
+            }
+        }
+    }
 
     virtual ~Board();
 };
