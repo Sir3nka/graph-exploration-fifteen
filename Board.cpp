@@ -123,3 +123,10 @@ void Board::setBoardSize(const matrix &boardSize) {
     Board::boardSize = boardSize;
 }
 
+const int Board::findCoordinatesofValue(const int &value) {
+    for (int i=0; i<=3; i++)
+        for(int j=0; j<=3; j++){
+            if(value==this->boardSize[i][j])
+                return i+j;
+        }
+}

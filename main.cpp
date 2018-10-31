@@ -115,24 +115,17 @@ const int Hamming(matrix arg){
         }
         return goal;
 }
-const int Manhatann(std::shared_ptr<Board>BoardState){
-    int goal=0;
-    int x=0;
-    int y=0;
-    for(int i=0; i<=3; i++)
-        for(int j=0;j<=3;j++){
+
+const int Manhattan( std::shared_ptr<Board> BoardState){
+    int sum=0;
+    for(int i=0;i<=3;i++)
+        for(int j=0; j<=3;j++) {
             if(Goal[i][j]==0)
-                //Zaznaczaał żeby ignorować pole z zerem
                 continue;
-                y=BoardState->getX(Goal[i][j]).first;
-                x=BoardState->getX(Goal[i][j]).second;
-                goal+=abs( (i+j) - (y + x) );
-
+            sum += abs((i + j) - BoardState->findCoordinatesofValue(Goal[i][j]));
         }
-
+    return sum;
 }
-
-
 int ASTAR(std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::string> &pattern){
     if(BoardState->getBoard()==Goal){
         std::cout<<"Found Solution, loaded matrix is equal to final matrix";
@@ -142,10 +135,16 @@ int ASTAR(std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::st
     std::shared_ptr<Node> curNode;
     std::shared_ptr<Node>Children;
     //Lambda przypisana do funkcji, śmieszne
+    //TODO make it able to pick which comparator (now its for manhatann)
     auto cmp = [](std::shared_ptr<Node> &left,std::shared_ptr<Node> &right){
         return left->getCounter() + Hamming  (left->getState() ) >= right->getCounter() + Hamming(right->getState() ) &&
                left->getCounter() + Hamming  (left->getState() ) != right->getCounter() + Hamming(right->getState() );
     };
+   //COMMENT THIS ONE FOR HAMMING
+   // auto cmp = [=](std::shared_ptr<Node> &left,std::shared_ptr<Node> &right){
+   //     return left->getCounter() + Manhattan  (BoardState ) >= right->getCounter() + Manhattan(BoardState ) &&
+   //            left->getCounter() + Manhattan  (BoardState ) != right->getCounter() + Manhattan(BoardState) ;
+   // };
     std::priority_queue<std::shared_ptr<Node>,std::deque<std::shared_ptr<Node>>, decltype(cmp) > open_list(cmp);
     std::unordered_set<size_t> explored;
     open_list.push(start);
@@ -221,6 +220,8 @@ int main(int argc, char* argv[]) {
     }
     matrix Testuje=parserToMatrix(Hold);
     auto Test = std::make_shared<Board>(Testuje);
+    std::cout<<"MANHATANN VALUE" <<Manhattan(Test)<<std::endl;
+    std::cout<<"HAMMING VALUE" << Hamming(Test->getBoard())<<std::endl;
     Test->setCoordinates();
     int a =20;
     std::string A;
