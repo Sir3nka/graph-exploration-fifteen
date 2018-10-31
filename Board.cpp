@@ -45,9 +45,7 @@ void Board::printSize(matrix matrix) {
     }
 }
 
-Board::~Board() {
-
-}
+Board::~Board() = default;
 
 int Board::getHCoord() const {
     return hCoord;
@@ -80,22 +78,22 @@ const std::vector<std::string> Board::getPossibleMoves(){
         x=this->wCoord;
         if (y > 0) {
             if(U)
-                possibleMoves.push_back("U");
+                possibleMoves.emplace_back("U");
             U=false;
         }
         if (y < 3) {
             if(D)
-                possibleMoves.push_back("D");
+                possibleMoves.emplace_back("D");
             D=false;
         }
         if (x > 0) {
             if(L)
-                possibleMoves.push_back("L");
+                possibleMoves.emplace_back("L");
             L=false;
         }
         if (x < 3) {
             if(R)
-                possibleMoves.push_back("R");
+                possibleMoves.emplace_back("R");
             R=false;
         }
     }

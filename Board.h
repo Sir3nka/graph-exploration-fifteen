@@ -22,7 +22,8 @@ private:
     int hCoord;
 public:
     void setBoardSize(const matrix &boardSize);
-    Board(const matrix &tab);
+
+    explicit Board(const matrix &tab);
     void printSize(matrix matrix);
     void setCoordinates();
     const std::string takeAction(const std::string &where) ;

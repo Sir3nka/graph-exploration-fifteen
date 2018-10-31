@@ -10,6 +10,7 @@
 #include <sstream>
 #include <time.h>
 #include <stack>
+#include <functional>
 
 
 matrix Goal ={{1,2,3,4},
@@ -19,7 +20,7 @@ matrix Goal ={{1,2,3,4},
 /*
  * Fajna funkcja haszujaca wiem
  */
-int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::string> &pattern)
+int BFS (const std::shared_ptr<Board> &BoardState, const matrix &resoult, std::vector<std::string> &pattern)
 {
     if(BoardState->getBoard()==Goal){
         std::cout<<"Found Solution, loaded matrix is equal to final matrix";
@@ -60,7 +61,7 @@ int BFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::str
     return 15;
 }
 
-int DFS (std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::string> &pattern, int rec)
+int DFS (const std::shared_ptr<Board> &BoardState, const matrix &resoult, std::vector<std::string> &pattern, int rec)
 {
     if(BoardState->getBoard()==Goal){
         std::cout<<"Found Solution, loaded matrix is equal to final matrix";
@@ -116,7 +117,7 @@ const int Hamming(matrix arg){
         return goal;
 }
 
-const int Manhattan( std::shared_ptr<Board> BoardState){
+const int Manhattan(const std::shared_ptr<Board> &BoardState){
     int sum=0;
     for(int i=0;i<=3;i++)
         for(int j=0; j<=3;j++) {
@@ -126,7 +127,8 @@ const int Manhattan( std::shared_ptr<Board> BoardState){
         }
     return sum;
 }
-int ASTAR(std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::string> &pattern){
+
+int ASTAR(const std::shared_ptr<Board> &BoardState, const matrix &resoult, std::vector<std::string> &pattern){
     if(BoardState->getBoard()==Goal){
         std::cout<<"Found Solution, loaded matrix is equal to final matrix";
         return 1;
@@ -136,16 +138,16 @@ int ASTAR(std::shared_ptr<Board> BoardState, matrix resoult, std::vector<std::st
     std::shared_ptr<Node>Children;
     //Lambda przypisana do funkcji, śmieszne
     //TODO make it able to pick which comparator (now its for manhatann)
-    auto cmp = [](std::shared_ptr<Node> &left,std::shared_ptr<Node> &right){
+     auto cmpHamming = [](std::shared_ptr<Node> &left,std::shared_ptr<Node> &right){
         return left->getCounter() + Hamming  (left->getState() ) >= right->getCounter() + Hamming(right->getState() ) &&
                left->getCounter() + Hamming  (left->getState() ) != right->getCounter() + Hamming(right->getState() );
     };
-   //COMMENT THIS ONE FOR HAMMING
-   // auto cmp = [=](std::shared_ptr<Node> &left,std::shared_ptr<Node> &right){
-   //     return left->getCounter() + Manhattan  (BoardState ) >= right->getCounter() + Manhattan(BoardState ) &&
-   //            left->getCounter() + Manhattan  (BoardState ) != right->getCounter() + Manhattan(BoardState) ;
-   // };
-    std::priority_queue<std::shared_ptr<Node>,std::deque<std::shared_ptr<Node>>, decltype(cmp) > open_list(cmp);
+    //COMMENT THIS ONE FOR HAMMING
+    auto cmpManhattan = [=](std::shared_ptr<Node> &left,std::shared_ptr<Node> &right){
+        return left->getCounter() + Manhattan  (BoardState ) >= right->getCounter() + Manhattan(BoardState ) &&
+               left->getCounter() + Manhattan  (BoardState ) != right->getCounter() + Manhattan(BoardState) ;
+    };
+    std::priority_queue<std::shared_ptr<Node>,std::deque<std::shared_ptr<Node>>, decltype(cmpManhattan) > open_list(cmpManhattan);
     std::unordered_set<size_t> explored;
     open_list.push(start);
     while(!open_list.empty()){
