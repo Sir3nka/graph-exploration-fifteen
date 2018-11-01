@@ -99,18 +99,6 @@ const std::vector<std::string> Board::getPossibleMoves(){
     }
     return possibleMoves;
 
-    /*
-    std::vector<std::pair<int,int>> posMoves;
-        if(hCoord>0)
-            posMoves.emplace_back(hCoord-1, wCoord);
-        if(hCoord<3)
-            posMoves.emplace_back(hCoord+1, wCoord);
-        if(wCoord>0)
-            posMoves.emplace_back(hCoord, wCoord-1);
-        if (wCoord<3)
-            posMoves.emplace_back(hCoord,wCoord+1);
-    return posMoves;
-*/
 }
 
 const matrix &Board::getBoard() const {
