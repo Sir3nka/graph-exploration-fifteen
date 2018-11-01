@@ -21,13 +21,13 @@ private:
     unsigned short actionTaken;
 public:
     Node(const uint_fast16_t actionTaken, NodePtr parent, const std::vector<uint_fast16_t>& neightbours, matrix oldState, std::vector<uint_fast16_t>& pattern): actionTaken(actionTaken),
-    parent(parent), oldState(oldState), counter(0) {
+                                                                                                                                                                parent(parent), oldState(oldState), counter(0) {
         posMoves.reserve(4);
 
         for(const auto &patternFromArgument:pattern)
             for (const auto &possibleMoveFromNeightbours:neightbours)
                 if(patternFromArgument == possibleMoveFromNeightbours)
-                        this->posMoves.emplace_back(possibleMoveFromNeightbours);
+                    this->posMoves.emplace_back(possibleMoveFromNeightbours);
 
         if(parent != nullptr){
             this->path = parent->getPath();

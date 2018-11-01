@@ -9,24 +9,24 @@ Board::Board(const matrix& tab): boardSize(tab), hCoord(0), wCoord(0){}
 
 const uint_fast16_t Board::takeAction(const uint_fast16_t where) {
     if (where == 'U'){
-            std::swap(boardSize[hCoord][wCoord], boardSize[hCoord-1][wCoord]);
-            --hCoord;
-            return 'U';
+        std::swap(boardSize[hCoord][wCoord], boardSize[hCoord-1][wCoord]);
+        --hCoord;
+        return 'U';
     }
     else if(where == 'L'){
-            std::swap(boardSize[hCoord][wCoord], boardSize[hCoord][wCoord-1]);
-            --wCoord;
-            return 'L';
+        std::swap(boardSize[hCoord][wCoord], boardSize[hCoord][wCoord-1]);
+        --wCoord;
+        return 'L';
     }
     else if(where == 'D'){
-            std::swap(boardSize[hCoord][wCoord], boardSize[hCoord+1][wCoord]);
-            ++hCoord;
-            return 'D';
+        std::swap(boardSize[hCoord][wCoord], boardSize[hCoord+1][wCoord]);
+        ++hCoord;
+        return 'D';
     }
     else if(where == 'R'){
-            std::swap(boardSize[hCoord][wCoord], boardSize[hCoord][wCoord+1]);
-            ++wCoord;
-            return 'R';
+        std::swap(boardSize[hCoord][wCoord], boardSize[hCoord][wCoord+1]);
+        ++wCoord;
+        return 'R';
     }
     return 'E';
 }

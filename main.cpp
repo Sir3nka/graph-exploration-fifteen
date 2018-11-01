@@ -27,7 +27,7 @@ struct VectorBFSHash{
         for(auto & it:v)
             for(auto & itt:it)
                 seed ^= hasher(itt) + 0x933779b9 + (seed<<6) + (seed>>2);
-            return seed;
+        return seed;
     }
 };
 struct VectorDFSHash{
@@ -71,9 +71,9 @@ int BFS (std::shared_ptr<Board> BoardState, std::vector<uint_fast16_t>& pattern)
         open_list.pop();
 
         if(BoardState->getBoard() == Goal){
-                std::cout << curNode->getCounter() << std::endl;
-                std::cout << curNode->getPath();
-                return 1;
+            std::cout << curNode->getCounter() << std::endl;
+            std::cout << curNode->getPath();
+            return 1;
         }
         else {
             for (const auto &it:curNode->getPossibleMovesForNode()){
@@ -313,7 +313,7 @@ int main(int argc, char* argv[]) {
         tStart = clock();
         ASTAR(Test, pattern);
     }
-   printf("\nTime taken: %.3fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
-   
-   return 0;
+    printf("\nTime taken: %.3fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+
+    return 0;
 }
