@@ -4,4 +4,4 @@ project(fifteenGame)
 SET(CMAKE_CXX_FLAGS -O2)
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(fifteenGame main.cpp Board.h Board.cpp Node.h Node.cpp)
+add_executable(fifteenGame main.cpp Board.h Board.cpp Node.h Node.cpp hashes.h bfs.h dfs.h hamming.h manhattan.h filesSaver.h)
