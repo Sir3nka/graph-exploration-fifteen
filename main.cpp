@@ -14,9 +14,9 @@
 
 
 matrix Goal ={{1,2,3,4},
-                  {5,6,7,8},
-                  {9,10,11,12},
-                  {13,14,15,0}};
+              {5,6,7,8},
+              {9,10,11,12},
+              {13,14,15,0}};
 /*
  * Fajna funkcja haszujaca wiem
  */
@@ -37,9 +37,9 @@ int BFS (const std::shared_ptr<Board> &BoardState, const matrix &resoult, std::v
         explored.insert(curNode->getSeed());
         open_list.pop();
         if(BoardState->getBoard()==Goal){
-                std::cout << curNode->getCounter() << std::endl;
-                std::cout << curNode->getPath() ;
-                return 1;
+            std::cout << curNode->getCounter() << std::endl;
+            std::cout << curNode->getPath() ;
+            return 1;
         }
         else {
             for (const auto &it:curNode->getPossibleMovesForNode()){
@@ -54,7 +54,7 @@ int BFS (const std::shared_ptr<Board> &BoardState, const matrix &resoult, std::v
                     std::cout << Children->getPath() ;
                     return 1;
                 }
-               open_list.push(Children);
+                open_list.push(Children);
             }
         }
     }
@@ -114,7 +114,7 @@ const int Hamming(matrix arg){
             if(arg[i][j]!=Goal[i][j])
                 goal++;
         }
-        return goal;
+    return goal;
 }
 
 const int Manhattan(const std::shared_ptr<Board> &BoardState){
@@ -138,7 +138,7 @@ int ASTAR(const std::shared_ptr<Board> &BoardState, const matrix &resoult, std::
     std::shared_ptr<Node>Children;
     //Lambda przypisana do funkcji, śmieszne
     //TODO make it able to pick which comparator (now its for manhatann)
-     auto cmpHamming = [](std::shared_ptr<Node> &left,std::shared_ptr<Node> &right){
+    auto cmpHamming = [](std::shared_ptr<Node> &left,std::shared_ptr<Node> &right){
         return left->getCounter() + Hamming  (left->getState() ) >= right->getCounter() + Hamming(right->getState() ) &&
                left->getCounter() + Hamming  (left->getState() ) != right->getCounter() + Hamming(right->getState() );
     };
@@ -182,23 +182,23 @@ int ASTAR(const std::shared_ptr<Board> &BoardState, const matrix &resoult, std::
 }
 
 matrix parserToMatrix(std::string &arg) {
-matrix Numbers;
-std::ifstream infile(arg.c_str());
-if(!infile.fail()) {
-    std::string String;
-    int a;
-    while (getline(infile, String)) {
-        //Kinda lazy solution
-        if (String.size() > 3) {
-            std::vector<int> Line;
-            std::stringstream Stream(String);
-            while (Stream >> a)
-                Line.push_back(a);
-            Numbers.push_back(Line);
+    matrix Numbers;
+    std::ifstream infile(arg.c_str());
+    if(!infile.fail()) {
+        std::string String;
+        int a;
+        while (getline(infile, String)) {
+            //Kinda lazy solution
+            if (String.size() > 3) {
+                std::vector<int> Line;
+                std::stringstream Stream(String);
+                while (Stream >> a)
+                    Line.push_back(a);
+                Numbers.push_back(Line);
+            }
         }
-    }
-    infile.close();
-    return Numbers;
+        infile.close();
+        return Numbers;
     }
     else std::cout << "FILE DOESNT EXIST!" << std::endl;
     return Goal;
@@ -229,16 +229,20 @@ int main(int argc, char* argv[]) {
     std::string A;
     std::cout <<"What method \n";
     std::cin >> A;
-    clock_t tStart = clock();
-    if(A=="BFS")
-    BFS(Test, Goal, pattern);
-    if(A=="DFS") {
+    clock_t tStart;
+    if(A == "bfs") {
+        tStart = clock();
+        BFS(Test, Goal, pattern);
+    }
+    else if(A == "dfs") {
         int rec;
         std::cout<<"NUMBER OF RECURSIONS\n";
         std::cin>>rec;
+        tStart = clock();
         DFS(Test, Goal, pattern, rec);
     }
-    if(A=="A*"){
+    else if(A == "astr"){
+        tStart = clock();
         ASTAR(Test, Goal, pattern);
     }
     printf("\nTime taken: %.3fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
