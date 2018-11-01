@@ -42,6 +42,7 @@ public:
     const matrix& getBoard() const;
 
     virtual ~Board();
+    const uint_fast16_t findCoordinatesofValue(const uint_fast16_t &value);
 };
 
 #endif //FIFTEENGAME_BOARD_H

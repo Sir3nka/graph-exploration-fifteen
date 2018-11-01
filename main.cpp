@@ -41,6 +41,17 @@ struct VectorDFSHash{
         return seed;
     }
 };
+struct VectorASTRHash{
+    //
+    inline size_t operator()(const matrix &v)const{
+        std::hash<size_t> hasher;
+        size_t seed(0);
+        for(auto & it:v)
+            for(auto & itt:it)
+                seed ^= hasher(itt) + 0x933779b9 +(seed<<6) + (seed>>2);
+        return seed;
+    }
+};
 int BFS (std::shared_ptr<Board> BoardState, std::vector<uint_fast16_t>& pattern)
 {
     if(BoardState->getBoard() == Goal){
@@ -121,7 +132,7 @@ int DFS (std::shared_ptr<Board> BoardState, std::vector<uint_fast16_t>& pattern,
 
                 if(Children->getPath().length() >= maxRecurionsNumber)
                     continue;
-                else if(explored.find(VectorDFSHash()(Children->getState()) ) != explored.end())
+                else if(explored.find(VectorDFSHash()(Children->getState())) != explored.end())
                     continue;
                 else if(BoardState->getBoard() == Goal) {
                     std::cout << Children->getCounter() << std::endl;
@@ -134,6 +145,87 @@ int DFS (std::shared_ptr<Board> BoardState, std::vector<uint_fast16_t>& pattern,
 
     }
     return 15;
+}
+const uint_fast16_t Hamming(matrix arg){
+    uint_fast16_t goal=0;
+    for(uint_fast16_t i=0; i<=3; i++)
+        for(uint_fast16_t j=0;j<=3;j++){
+            if(arg[i][j]==0)
+                //Zaznaczaał żeby ignorować pole z zerem
+                continue;
+            if(arg[i][j]!=Goal[i][j])
+                goal++;
+        }
+    return goal;
+}
+
+const uint_fast16_t Manhattan(const std::shared_ptr<Board> &BoardState){
+    uint_fast16_t sum=0;
+    for(uint_fast16_t i=0;i<=3;i++)
+        for(uint_fast16_t j=0; j<=3;j++) {
+            if(Goal[i][j]==0)
+                continue;
+            sum += abs((i + j) - BoardState->findCoordinatesofValue(Goal[i][j]));
+        }
+    return sum;
+}
+
+int ASTAR(const std::shared_ptr<Board> &BoardState, std::vector<uint_fast16_t> &pattern){
+    if(BoardState->getBoard() == Goal){
+        std::cout<<"Found Solution, loaded matrix is equal to final matrix";
+        return 1;
+    }
+
+    std::shared_ptr<Node> curNode;
+    std::shared_ptr<Node> Children;
+    //Lambda przypisana do funkcji, śmieszne
+    //TODO make it able to pick which comparator (now its for manhatann)
+    auto cmpHamming = [](std::shared_ptr<Node> &left,std::shared_ptr<Node> &right){
+        return left->getCounter() + Hamming (left->getState()) >= right->getCounter() + Hamming(right->getState()) &&
+               left->getCounter() + Hamming (left->getState()) != right->getCounter() + Hamming(right->getState());
+    };
+    //COMMENT THIS ONE FOR HAMMING
+    auto cmpManhattan = [=](std::shared_ptr<Node> &left, std::shared_ptr<Node> &right){
+        return left->getCounter() + Manhattan (BoardState) >= right->getCounter() + Manhattan(BoardState) &&
+               left->getCounter() + Manhattan (BoardState) != right->getCounter() + Manhattan(BoardState);
+    };
+
+    std::priority_queue<std::shared_ptr<Node>, std::deque<std::shared_ptr<Node>>, decltype(cmpHamming) > open_list(cmpHamming);
+    std::unordered_set<size_t> explored;
+
+    open_list.push(std::make_shared<Node>('E', nullptr, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern));
+
+    while(!open_list.empty()){
+        curNode = open_list.top();
+        explored.insert(VectorASTRHash()(curNode->getState()));
+        open_list.pop();
+
+        if(BoardState->getBoard() == Goal){
+            std::cout << curNode->getCounter() << std::endl;
+            std::cout << curNode->getPath() ;
+            return 1;
+        }
+        else {
+            for (const auto &it:curNode->getPossibleMovesForNode()){
+                BoardState->setBoardSize(curNode->getState());
+                BoardState->setCoordinates();
+                BoardState->takeAction(it);
+
+                Children = std::make_shared<Node> (it, curNode, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern);
+
+                if(explored.find(VectorASTRHash()(Children->getState())) != explored.end())
+                    continue;
+                else if(BoardState->getBoard() == Goal) {
+                    std::cout << Children->getCounter() << std::endl;
+                    std::cout << Children->getPath() ;
+                    return 1;
+                }
+                open_list.push(Children);
+            }
+        }
+    }
+    return 15;
+
 }
 
 matrix parserToMatrix(std::string& arg) {
@@ -163,6 +255,7 @@ matrix parserToMatrix(std::string& arg) {
     else std::cout << "FILE DOESNT EXIST!" << std::endl;
     return Goal;
 }
+
 int main(int argc, char* argv[]) {
     std::vector<uint_fast16_t> pattern;
     pattern.reserve(3);
@@ -188,6 +281,10 @@ int main(int argc, char* argv[]) {
     matrix Testuje(parserToMatrix(Hold));
 
     auto Test(std::make_shared<Board>(Testuje));
+
+    std::cout<<"MANHATANN VALUE: " << Manhattan(Test) << std::endl;
+    std::cout<<"HAMMING VALUE: " << Hamming(Test->getBoard()) << std::endl;
+
     Test->setCoordinates();
 
     std::string methodName;
@@ -199,19 +296,24 @@ int main(int argc, char* argv[]) {
     std::cout << "What method \n";
     std::cin >> methodName;
 
-    if(methodName == "BFS") {
+    if(methodName == "bfs") {
         tStart = clock();
         BFS(Test, pattern);
-   }
-   else if(methodName == "DFS") {
-       uint_fast16_t maxRecurionsNumber;
-       std::cout<<"NUMBER OF RECURSIONS\n";
-       std::cin>>maxRecurionsNumber;
-       tStart = clock();
-       DFS(Test, pattern, maxRecurionsNumber);
-   }
+    }
+    else if(methodName == "dfs") {
+        uint_fast16_t maxRecurionsNumber;
+
+        std::cout<<"NUMBER OF RECURSIONS\n";
+        std::cin>>maxRecurionsNumber;
+        tStart = clock();
+
+        DFS(Test, pattern, maxRecurionsNumber);
+    }
+    else if(methodName == "astr"){
+        tStart = clock();
+        ASTAR(Test, pattern);
+    }
    printf("\nTime taken: %.3fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
    
    return 0;
 }
-

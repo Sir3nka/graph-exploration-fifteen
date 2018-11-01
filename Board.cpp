@@ -8,7 +8,6 @@ Board::Board(const matrix& tab): boardSize(tab), hCoord(0), wCoord(0){}
 
 
 const uint_fast16_t Board::takeAction(const uint_fast16_t where) {
-
     if (where == 'U'){
             std::swap(boardSize[hCoord][wCoord], boardSize[hCoord-1][wCoord]);
             --hCoord;
@@ -82,4 +81,12 @@ const matrix &Board::getBoard() const {
 
 void Board::setBoardSize(const matrix& newBoardSize) {
     boardSize = newBoardSize;
+}
+
+const uint_fast16_t Board::findCoordinatesofValue(const uint_fast16_t &value) {
+    for (uint_fast16_t i = 0; i <= 3; i++)
+        for(uint_fast16_t j = 0; j <= 3; j++){
+            if(value == this->boardSize[i][j])
+                return i+j;
+        }
 }
