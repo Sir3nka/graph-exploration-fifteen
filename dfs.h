@@ -11,6 +11,7 @@
 #include "hashes.h"
 #include "Board.h"
 #include "Node.h"
+#include <unordered_map>
 
 int DFS (std::shared_ptr<Board> BoardState, unsigned short& realOpenListSize, unsigned short& realExploredSize, int& maxRecursionDepth, unsigned short& numbersOfSteps, std::string& path, std::vector<uint_fast16_t>& pattern, uint_fast16_t maxRecurionsNumber)
 {
@@ -24,14 +25,14 @@ int DFS (std::shared_ptr<Board> BoardState, unsigned short& realOpenListSize, un
     std::shared_ptr<Node> curNode;
     std::shared_ptr<Node> Children;
     std::stack<std::shared_ptr<Node>> open_list;
-    std::unordered_set<int> explored;
+    std::unordered_map<int, int> explored;
     open_list.push(std::make_shared<Node>('E', nullptr, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern));
     ++realOpenListSize;
 
     while(!open_list.empty()){
         curNode = open_list.top();
         ++realExploredSize;
-        explored.insert(VectorDFSHash()(curNode->getState()));
+        explored[VectorDFSHash()(curNode->getState())] = curNode->getCounter();
         open_list.pop();
         --realOpenListSize;
 
@@ -48,8 +49,14 @@ int DFS (std::shared_ptr<Board> BoardState, unsigned short& realOpenListSize, un
 
             if(Children->getPath().length() >= maxRecurionsNumber)
                 continue;
-            else if(explored.find(VectorDFSHash()(Children->getState())) != explored.end())
-                continue;
+            else if(explored.find(VectorDFSHash()(Children->getState())) != explored.end()) {
+                if(explored.at( VectorDFSHash()( Children->getState() )) <= Children ->getCounter() ) {
+                    continue;
+                }else {
+                        explored.at(VectorDFSHash()(Children->getState())) = Children->getCounter();
+                }
+
+            }
             else if(BoardState->getBoard() == Goal) {
                 //std::cout << Children->getCounter() << std::endl;
                 //std::cout << Children->getPath();

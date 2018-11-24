@@ -38,3 +38,7 @@ uint_fast16_t Node::operator() () {
 uint_fast16_t Node::getCounter() const {
     return counter;
 }
+
+unsigned short Node::getActionTaken() const {
+    return actionTaken;
+}

@@ -24,11 +24,12 @@ public:
                                                                                                                                                                 parent(parent), oldState(oldState), counter(0) {
         posMoves.reserve(4);
 
-        for(const auto &patternFromArgument:pattern)
+        for(const auto &patternFromArgument:pattern) {
             for (const auto &possibleMoveFromNeightbours:neightbours)
-                if(patternFromArgument == possibleMoveFromNeightbours)
+                if (patternFromArgument == possibleMoveFromNeightbours)
                     this->posMoves.emplace_back(possibleMoveFromNeightbours);
 
+        }
         if(parent != nullptr){
             this->path = parent->getPath();
             if(actionTaken != 'E'){
@@ -37,6 +38,8 @@ public:
             counter += 1 + this->parent->getCounter();
         }
     }
+
+    unsigned short getActionTaken() const;
 
     bool operator==(const Node &rhs) const;
 
