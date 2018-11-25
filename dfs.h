@@ -35,8 +35,7 @@ int DFS (std::shared_ptr<Board> BoardState, unsigned short& realOpenListSize, un
         explored[VectorDFSHash()(curNode->getState())] = curNode->getCounter();
         open_list.pop();
         --realOpenListSize;
-
-
+        curNode->Reverse();
         for (const auto &it:curNode->getPossibleMovesForNode()){
             BoardState->setBoardSize(curNode->getState());
             BoardState->setCoordinates();
@@ -67,6 +66,7 @@ int DFS (std::shared_ptr<Board> BoardState, unsigned short& realOpenListSize, un
             }
             open_list.push(Children);
             ++realOpenListSize;
+
         }
     }
     numbersOfSteps = 65535;

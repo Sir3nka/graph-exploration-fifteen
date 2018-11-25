@@ -3,6 +3,7 @@
 //
 
 #include "Node.h"
+#include "algorithm"
 
 const std::vector<uint_fast16_t>& Node::getPossibleMovesForNode() const {
     return posMoves;
@@ -18,7 +19,9 @@ const std::string &Node::getPath() const {
 matrix& Node::getState()  {
     return oldState;
 }
-
+void Node::Reverse() {
+    std::reverse(std::begin(this->posMoves), std::end(this->posMoves));
+}
 bool Node::operator==(const Node &rhs) const {
     return actionTaken == rhs.actionTaken &&
            path == rhs.path &&

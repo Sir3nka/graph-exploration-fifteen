@@ -50,6 +50,7 @@ public:
     const std::vector<uint_fast16_t>& getPossibleMovesForNode() const;
 
     NodePtr getParent() const;
+    void Reverse ();
 
     const std::string& getPath() const;
     uint_fast16_t getCounter() const;
