@@ -23,55 +23,41 @@ const uint_fast16_t Manhattan(const std::shared_ptr<Board> &BoardState){
     return sum;
 }
 
-int ASTARmanhattan(const std::shared_ptr<Board> &BoardState, unsigned short& realOpenListSize, unsigned short& realExploredSize, int& maxRecursionDepth, unsigned short& numbersOfSteps, std::string& path){
+int ASTARmanhattan(const std::shared_ptr<Board> &BoardState, unsigned short& realOpenListSize, unsigned short& realExploredSize,
+        int& maxRecursionDepth, unsigned short& numbersOfSteps, std::string& path){
     if(BoardState->getBoard() == Goal){
-        //std::cout<<"Found Solution, loaded matrix is equal to final matrix";
         numbersOfSteps  = 0;
         path            = "";
         return 1;
     }
-
     std::vector<uint_fast16_t> pattern;
-
     pattern.emplace_back('U');
     pattern.emplace_back('D');
     pattern.emplace_back('L');
     pattern.emplace_back('R');
-
-
     std::shared_ptr<Node> curNode;
     std::shared_ptr<Node> Children;
-
     auto cmpManhattan = [=](std::shared_ptr<Node> &left, std::shared_ptr<Node> &right){
         return left->getCounter() + Manhattan (BoardState) >= right->getCounter() + Manhattan(BoardState) &&
                left->getCounter() + Manhattan (BoardState) != right->getCounter() + Manhattan(BoardState);
     };
-
-
     std::priority_queue<std::shared_ptr<Node>, std::deque<std::shared_ptr<Node>>, decltype(cmpManhattan) > open_list(cmpManhattan);
     std::unordered_set<uint_fast16_t> explored;
-
     open_list.push(std::make_shared<Node>('E', nullptr, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern));
     ++realOpenListSize;
-
     while(!open_list.empty()){
         curNode = open_list.top();
         ++realExploredSize;
-        explored.insert(VectorBFSandASTARHash()(curNode->getState()));
+        explored.insert(Hash<uint_fast16_t >()(curNode->getState()));
         open_list.pop();
         --realOpenListSize;
-
-
         for (const auto &it:curNode->getPossibleMovesForNode()){
             BoardState->setBoardSize(curNode->getState());
             BoardState->setCoordinates();
             BoardState->takeAction(it);
-
             Children = std::make_shared<Node> (it, curNode, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern);
-
-            if (Children->getCounter() > maxRecursionDepth)         maxRecursionDepth = Children->getCounter();
-
-            if(explored.find(VectorBFSandASTARHash()(Children->getState())) != explored.end())
+            if (Children->getCounter() > maxRecursionDepth) maxRecursionDepth = Children->getCounter();
+            if(explored.find(Hash<uint_fast16_t >()(Children->getState())) != explored.end())
                 continue;
             else if(BoardState->getBoard() == Goal) {
                 //std::cout << Children->getCounter() << std::endl;

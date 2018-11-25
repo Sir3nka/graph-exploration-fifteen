@@ -65,7 +65,7 @@ int main(int argc, char* argv[]) {
         BFS(Test, realOpenListSize, realExploredSize, maxRecursionDepth, numbersOfSteps, path, patternOrHeuristic);
     }
     else if(methodName == "dfs") {
-        uint_fast16_t maxRecurionsNumber(20);
+        uint_fast16_t maxRecurionsNumber(40);
 
         tStart = clock();
 

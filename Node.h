@@ -19,6 +19,7 @@ private:
     std::string path;
     unsigned short counter;
     unsigned short actionTaken;
+
 public:
     Node(const uint_fast16_t actionTaken, NodePtr parent, const std::vector<uint_fast16_t>& neightbours, matrix oldState, std::vector<uint_fast16_t>& pattern): actionTaken(actionTaken),
                                                                                                                                                                 parent(parent), oldState(oldState), counter(0) {
