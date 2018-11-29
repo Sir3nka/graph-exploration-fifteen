@@ -2,11 +2,11 @@
 #include <fstream>
 #include <sstream>
 #include <time.h>
-#include "bfs.h"
-#include "dfs.h"
-#include "hamming.h"
-#include "manhattan.h"
-#include "filesSaver.h"
+#include "../include/bfs.h"
+#include "../include/dfs.h"
+#include "../include/hamming.h"
+#include "../include/manhattan.h"
+#include "../include/filesSaver.h"
 
 matrix parserToMatrix(std::string& arg) {
     std::ifstream infile(arg.c_str());

@@ -1,0 +1,1 @@
+add_executable(fifteenGame main.cpp Board.cpp Node.cpp)

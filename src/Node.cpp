@@ -2,7 +2,7 @@
 // Created by root on 20.10.18.
 //
 
-#include "Node.h"
+#include "../include/Node.h"
 #include "algorithm"
 
 const std::vector<uint_fast16_t>& Node::getPossibleMovesForNode() const {

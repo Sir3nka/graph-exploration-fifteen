@@ -1,7 +1,7 @@
 //
 // Created by root on 19.10.18.
 //
-#include "Board.h"
+#include "../include/Board.h"
 #include <algorithm>
 
 Board::Board(const matrix& tab): boardSize(tab), hCoord(0), wCoord(0){}
