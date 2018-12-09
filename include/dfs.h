@@ -26,6 +26,7 @@ int DFS (std::shared_ptr<Board> BoardState, unsigned short& realOpenListSize, un
     std::unordered_map<int, int> explored;
     open_list.push(std::make_shared<Node>('E', nullptr, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern));
     ++realOpenListSize;
+
     while(!open_list.empty()){
         curNode = open_list.top();
         ++realExploredSize;
@@ -33,14 +34,17 @@ int DFS (std::shared_ptr<Board> BoardState, unsigned short& realOpenListSize, un
         open_list.pop();
         --realOpenListSize;
         curNode->Reverse();
+
         for (const auto &it:curNode->getPossibleMovesForNode()){
             BoardState->setBoardSize(curNode->getState());
             BoardState->setCoordinates();
             BoardState->takeAction(it);
             Children = std::make_shared<Node> (it, curNode, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern);
+
             if (Children->getCounter() > maxRecursionDepth) maxRecursionDepth = Children->getCounter();
             if(Children->getPath().length() >= maxRecurionsNumber)
-                continue;
+                continue
+                ;
             else if(explored.find(Hash<int>()(Children->getState())) != explored.end()) {
                 if(explored.at( Hash<int>()( Children->getState() )) <= Children ->getCounter() ) {
                     continue;
