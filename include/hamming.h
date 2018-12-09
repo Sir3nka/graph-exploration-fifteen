@@ -16,11 +16,8 @@ const uint_fast16_t Hamming(matrix arg){
     uint_fast16_t goal(0);
     for(uint_fast16_t i(0); i < 4; ++i)
         for(uint_fast16_t j(0); j < 4; ++j){
-            if(arg[i][j] == 0)
-                //Zaznaczaał żeby ignorować pole z zerem
-                continue;
-            else if(arg[i][j] != Goal[i][j])
-                ++goal;
+            if(arg[i][j] != 0 && arg[i][j] != Goal[i][j])
+                goal++;
         }
     return goal;
 }
@@ -29,21 +26,16 @@ int ASTARhamming(const std::shared_ptr<Board> &BoardState, unsigned short& realO
         int& maxRecursionDepth, unsigned short& numbersOfSteps, std::string& path){
 
     if(BoardState->getBoard() == Goal){
-        //std::cout<<"Found Solution, loaded matrix is equal to final matrix";
         numbersOfSteps  = 0;
         path            = "";
         return 1;
     }
-    std::vector<uint_fast16_t> pattern;
-    pattern.emplace_back('U');
-    pattern.emplace_back('D');
-    pattern.emplace_back('L');
-    pattern.emplace_back('R');
+    std::vector<uint_fast16_t> pattern = {'U','D','L','R'};
     std::shared_ptr<Node> curNode;
     std::shared_ptr<Node> Children;
     //Our comparator, ki
     auto cmpHamming = [](std::shared_ptr<Node> &left,std::shared_ptr<Node> &right){
-        return left->getCounter() + Hamming (left->getState()) >= right->getCounter() + Hamming(right->getState()) &&
+        return left->getCounter() + Hamming (left->getState()) > right->getCounter() + Hamming(right->getState()) &&
                left->getCounter() + Hamming (left->getState()) != right->getCounter() + Hamming(right->getState());
     };
     std::priority_queue<std::shared_ptr<Node>, std::deque<std::shared_ptr<Node>>, decltype(cmpHamming) > open_list(cmpHamming);
@@ -71,7 +63,7 @@ int ASTARhamming(const std::shared_ptr<Board> &BoardState, unsigned short& realO
                 numbersOfSteps  = Children->getCounter();
                 path            = Children->getPath();
                 return 1;
-            }
+            };
             open_list.push(Children);
             ++realOpenListSize;
         }
