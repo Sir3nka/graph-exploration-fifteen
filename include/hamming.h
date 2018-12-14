@@ -33,7 +33,6 @@ int ASTARhamming(const std::shared_ptr<Board> &BoardState, unsigned short& realO
     std::vector<uint_fast16_t> pattern = {'U','D','L','R'};
     std::shared_ptr<Node> curNode;
     std::shared_ptr<Node> Children;
-    //Our comparator, ki
     auto cmpHamming = [](std::shared_ptr<Node> &left,std::shared_ptr<Node> &right){
         return left->getCounter() + Hamming (left->getState()) > right->getCounter() + Hamming(right->getState()) &&
                left->getCounter() + Hamming (left->getState()) != right->getCounter() + Hamming(right->getState());

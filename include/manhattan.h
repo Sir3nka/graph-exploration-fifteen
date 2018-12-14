@@ -12,23 +12,23 @@
 #include "Board.h"
 #include "Node.h"
 
-const uint_fast16_t Manhattan(const matrix &arg){
-    uint_fast16_t sum(0);
-    for(int i(0); i < 4; ++i)
-        for(int j(0); j < 4; ++j) {
-            if (arg[i][j] != 0 && arg[i][j] != Goal[i][j])
-            {
-                auto makePair = [](uint_fast16_t value, matrix arg) {
-                    for (int y(0); y < 4; y++)
-                        for (int x(0); x < 4; x++)
-                            if (arg[x][y] == value)
-                                return std::make_pair( x, y);
-                };
-
-                auto holdPair = makePair(Goal[i][j], arg);
-                sum += abs(j - holdPair.first) + abs(i - holdPair.second);
+const int Manhattan(const matrix &arg){
+    int sum(0);
+    for(int i(0); i < arg.size(); ++i)
+        for(int j(0); j < arg[0].size(); ++j) {
+            int value = arg[i][j];
+//            if (arg[i][j] != 0 && arg[i][j] != Goal[i][j])
+//            {
+//               auto makePair = [=](int value, matrix arg) {
+//                    for (int y(0); y < 4; y++)
+//                        for (int x(0); x < 4; x++)
+//                            if (arg[x][y] == value)
+//                                return std::make_pair( x, y);
+//                };
+            if(value == 0)
+                continue;
+                sum += abs( i - ( value -1 ) / arg.size() ) + abs( j - ((value-1)%arg.size()));
             }
-        }
     return sum;
 }
 
@@ -40,23 +40,22 @@ int ASTARmanhattan(const std::shared_ptr<Board> &BoardState, unsigned short& rea
         path            = "";
         return 1;
     }
-    std::vector<uint_fast16_t> pattern = {'U','D','L','R'};
+    std::vector<uint_fast16_t> pattern = {'D','U','R','L'};
     std::shared_ptr<Node> curNode;
     std::shared_ptr<Node> Children;
 
     auto cmpManhattan = [=](std::shared_ptr<Node> &left, std::shared_ptr<Node> &right){
-        return left->getCounter() + Manhattan (left->getState()) > right->getCounter() + Manhattan(right->getState()) &&
-               left->getCounter() + Manhattan (left->getState()) != right->getCounter() + Manhattan(right->getState());
+        return ( left->getCounter() + Manhattan (left->getState()) ) >= ( right->getCounter() + Manhattan(right->getState()) );
     };
     std::priority_queue<std::shared_ptr<Node>, std::deque<std::shared_ptr<Node>>, decltype(cmpManhattan) > open_list(cmpManhattan);
-    std::unordered_set<size_t> explored;
+    std::unordered_set<size_t > explored;
     open_list.push(std::make_shared<Node>('E', nullptr, BoardState->getPossibleMoves(), BoardState->getBoard(), pattern));
     ++realOpenListSize;
 
     while(!open_list.empty()){
         curNode = open_list.top();
         ++realExploredSize;
-        explored.insert(Hash<size_t>()(curNode->getState()));
+        explored.insert(Hash<size_t >()(curNode->getState()));
         open_list.pop();
         --realOpenListSize;
 
@@ -69,7 +68,7 @@ int ASTARmanhattan(const std::shared_ptr<Board> &BoardState, unsigned short& rea
             if (Children->getCounter() > maxRecursionDepth) maxRecursionDepth = Children->getCounter();
             if (Children -> getCounter() == 8 )
                 continue;
-            if(explored.find(Hash<size_t>()(Children->getState())) != explored.end())
+            if(explored.find(Hash<size_t >()(Children->getState())) != explored.end())
                 continue;
             else if(BoardState->getBoard() == Goal) {
                 numbersOfSteps  = Children->getCounter();
